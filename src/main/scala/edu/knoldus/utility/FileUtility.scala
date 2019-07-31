@@ -1,9 +1,9 @@
 package edu.knoldus.utility
 
 import java.nio.file.{Files, Paths}
-import net.liftweb.json._
 
-import edu.knoldus.model.Models.{ImageHeaderData, ImageObjects}
+import edu.knoldus.model.{GPSData, IMUData, ImageHeaderData, ImageObjects}
+import net.liftweb.json._
 
 
 object FileUtility {
@@ -24,5 +24,17 @@ object FileUtility {
     val fileJson = readFile(path)
     val imageObjects = parse(fileJson)
     imageObjects.extract[List[ImageObjects]]
+  }
+
+  def readGPSDataJsonFile(path: String): List[GPSData] = {
+    val fileJson = readFile(path)
+    val imageObjects = parse(fileJson)
+    imageObjects.extract[List[GPSData]]
+  }
+
+  def readIMUDataJsonFile(path: String): List[IMUData] = {
+    val fileJson = readFile(path)
+    val imageObjects = parse(fileJson)
+    imageObjects.extract[List[IMUData]]
   }
 }

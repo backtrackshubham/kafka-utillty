@@ -1,5 +1,6 @@
 package edu.knoldus
 
+import edu.knoldus.model.ImageHeaderData
 import edu.knoldus.model.Models.ImageHeaderData
 import edu.knoldus.producer.DataProducer
 import edu.knoldus.utility.FileUtility
