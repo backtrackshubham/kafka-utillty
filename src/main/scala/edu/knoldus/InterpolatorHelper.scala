@@ -17,6 +17,5 @@ object InterpolatorHelper extends App {
   publisherModel.gpsData.foreach(gpsData => {
     DataProducer.writeToKafka("Image_GPS", gpsData.gps_id, write(gpsData))
   })
-
-  DataProducer.closeProducer
+//  DataProducer.closeProducer
 }
