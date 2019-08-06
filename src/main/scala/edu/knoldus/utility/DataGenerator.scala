@@ -5,7 +5,7 @@ import edu.knoldus.model.{GPSData, ImageHeaderData}
 object DataGenerator {
 
   case class PublisherModel(imageHeaderData: List[ImageHeaderData],gpsData: List[GPSData])
-  val getGpsTime: (Long, Int) => Long = (time: Long, count: Int) => if(count % 2 == 0) time + count else count - count
+  val getGpsTime: (Long, Int) => Long = (time: Long, count: Int) => if(count % 2 == 0) time + count else time - count
   private def getImageHeaderData: List[ImageHeaderData] = {
     (1 to 10).map(_ => {
       val imageId = java.util.UUID.randomUUID().toString
