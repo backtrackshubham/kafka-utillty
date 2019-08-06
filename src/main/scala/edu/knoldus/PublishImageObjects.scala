@@ -11,7 +11,7 @@ object PublishImageObjects {
 
     implicit val formats = DefaultFormats
 
-    val IMAGE_OBJECTS_TOPIC = "Image_Objects"
+    val IMAGE_OBJECTS_TOPIC = "test-topic"
 
     //Please change path accordingly
     val imageHeaderObjects: List[ImageObjects] = FileUtility.readImageObjectsJsonFile("/home/freaks/SHUBHAM/Projects/KERB/kerb-kafka-publisher/src/main/resources/object-item.json")
