@@ -1,20 +1,22 @@
 package edu.knoldus.model
 
 case class ImageHeaderData(
-                            imageId: String,
-                            unitId: String,
-                            cameraId: String,
-                            imuData: Option[IMUData],
-                            gpsData: Option[GPSData],
-                            ipAddress: String,
+                            image_Id: String,
+                            unit_Id: String,
+                            camera_Id: String,
+                            imu_Id: Option[IMUData],
+                            gps_Id: Option[GPSData],
+                            ipaddress: String,
                             timestamp: String,
                             fNumber: Double,
-                            fps: Int,
                             stereo: Boolean,
                             nXPixels: Int,
                             nYPixels: Int,
-                            dimX: Int,
-                            dimY: Int,
+                            fps: Int,
+                            gain: Int,
+                            exposure: Int,
+                            white_balance_blue: Int,
+                            white_balance_red: Int,
                             stereoSep: Option[Double]
                           )
 

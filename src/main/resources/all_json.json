@@ -1,4 +1,4 @@
-{ "imageId": "ed1b1485-9b224c75-b2da-9ef44898b822", "unitId": "35b0ad51-8b75-4790-ad9b-449896005f4a", "cameraId": "e7269804-1fec-4600-8b13-a48517ef0e2f", "ipAddress": "192.168.52.63", "timestamp": "2019-07-30", "fNumber": 15.25, "fps": 15, "stereo": true, "nXPixels": 78, "nYPixels": 45, "dimX": 3, "dimY": 14, "stereoSep": 45.26 }
+{ "imageId": "ed1b1485-9b224c75-b2da-9ef44898b822", "unitId": "35b0ad51-8b75-4790-ad9b-449896005f4a", "cameraId": "e7269804-1fec-4600-8b13-a48517ef0e2f", "ipAddress": "192.168.52.63", "timestamp, "fNumber": 15.25, "fps": 15, "stereo": true, "nXPixels": 78, "nYPixels": 45, "dimX": 3, "dimY": 14, "stereoSep": 45.26 }
 
 
 { "imageId": "ed1b1485-9b224c75-b2da-9ef44898b822", "objectDetectorId": "588b4d62-1d07-47c5-a0a8-17755aad14a5", "objects": [{ "objId": 12345, "imageId": "ed1b1485-9b224c75-b2da-9ef44898b822", "objLabel": 5, "objectDetectorId": "980c62e2-7dfb-4e22-8474-7baef19e5669", "prob": 12.3, "xDim": 5, "yDim": 4, "bBox": { "lowerX": 2, "lowerY": 3, "upperX": 14, "upperY": 10 }, "bBoxImage": "boxerimage", "disparityMap": "disparityMap" }], "timestamp": "1563870519836" }

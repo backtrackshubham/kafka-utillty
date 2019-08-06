@@ -1,7 +1,6 @@
 package edu.knoldus
 
 import edu.knoldus.model.ImageObjects
-import edu.knoldus.model.Models.ImageHeaderData
 import edu.knoldus.producer.DataProducer
 import edu.knoldus.utility.FileUtility
 import net.liftweb.json.Serialization.write
