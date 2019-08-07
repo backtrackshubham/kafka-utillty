@@ -17,7 +17,9 @@ case class ImageHeaderData(
                             exposure: Int,
                             white_balance_blue: Int,
                             white_balance_red: Int,
-                            stereoSep: Option[Double]
+                            stereoSep: Option[Double],
+                            hdfsUrlLeft: Option[String],
+                            hdfsUrlRight: Option[String]
                           )
 
 

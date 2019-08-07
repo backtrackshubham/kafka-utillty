@@ -27,6 +27,8 @@ object DataGenerator {
         6,
         5,
         9,
+        None,
+        None,
         None)
     }).toList
   }

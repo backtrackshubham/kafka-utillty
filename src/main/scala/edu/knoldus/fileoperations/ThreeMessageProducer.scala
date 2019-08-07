@@ -13,7 +13,7 @@ import net.liftweb.json.Serialization.write
 import net.liftweb.json._
 
 
-object FileProducer extends App {
+object ThreeMessageProducer extends App {
   implicit val formats = DefaultFormats
 
   private val props = new Properties()
@@ -37,28 +37,35 @@ object FileProducer extends App {
     new File("/home/freaks/Downloads/chrome_downloads/gita/universe.png"))
 
   val headerList = DataGenerator.getDataToPublish.imageHeaderData
-  def writeToKafka(topic: String, imageId: String, json: Array[Byte], headers: ImageHeaderData): Unit = {
-    val head = new Header(){
-      override def key(): String = "imageHeaderJson"
-      println("converting bytes")
-      override def value(): Array[Byte] = write(headers).getBytes
-    }
-    val al = new util.ArrayList[Header]()
-    al.add(head)
-    producer.send(new ProducerRecord[String, Array[Byte]](topic, 0,imageId, json, al)).get()
+
+
+
+
+
+
+  def writeToKafka(topic: String, imageId: String, json: Array[Byte]): Unit = {
+    producer.send(new ProducerRecord[String, Array[Byte]](topic, imageId, json)).get()
   }
+
+
+  headerList.foreach(data => {
+    val jsonBytes = write(data).getBytes
+    writeToKafka("Image_Data", data.image_Id, jsonBytes)
+  })
+
   headerList.zip(fileList).foreach{
     case (imageHeaderData: ImageHeaderData, file: File) =>
       val byteArray = Files.readAllBytes(file.toPath)
       println("Writing data")
-      writeToKafka("Image_Data", imageHeaderData.image_Id, byteArray, imageHeaderData)
+      writeToKafka("Image_Data", s"${imageHeaderData.image_Id}-L" , byteArray)
+      writeToKafka("Image_Data", s"${imageHeaderData.image_Id}-R", byteArray)
   }
-//
-//  fileList.foreach(file => {
-//    val byteArray = Files.readAllBytes(file.toPath)
-//    val uuid = java.util.UUID.randomUUID().toString
-//    writeToKafka("test-topic", uuid, byteArray)
-//  })
+  //
+  //  fileList.foreach(file => {
+  //    val byteArray = Files.readAllBytes(file.toPath)
+  //    val uuid = java.util.UUID.randomUUID().toString
+  //    writeToKafka("test-topic", uuid, byteArray)
+  //  })
 
   def closeProducer = producer.close()
 }
