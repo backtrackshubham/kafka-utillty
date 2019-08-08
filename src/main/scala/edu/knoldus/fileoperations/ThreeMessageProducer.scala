@@ -23,18 +23,20 @@ object ThreeMessageProducer extends App {
   props.put("max.request.size", "1048576")
   private val producer = new KafkaProducer[String, Array[Byte]](props)
 
-  println("-----------------------------------")
+  println(s"------------------${System.getProperty("user.dir")}-----------------")
 
-  val fileList: List[File] = List(new File("/home/freaks/Downloads/chrome_downloads/gita/beginingEnd.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/karma.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/moksha.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/withoutExpectations.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/noJudgement.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/worldWhatYouImagine.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/constantChnage.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/realUnreal.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/goodEvil.png"),
-    new File("/home/freaks/Downloads/chrome_downloads/gita/universe.png"))
+  val currentPath = System.getenv("user.dir")
+  val imagePath = s"$currentPath/src/main/resources/"
+  val fileList: List[File] = List(new File(s"${imagePath}beginingEnd.png"),
+    new File(s"${imagePath}karma.png"),
+    new File(s"${imagePath}moksha.png"),
+    new File(s"${imagePath}withoutExpectations.png"),
+    new File(s"${imagePath}noJudgement.png"),
+    new File(s"${imagePath}worldWhatYouImagine.png"),
+    new File(s"${imagePath}constantChnage.png"),
+    new File(s"${imagePath}realUnreal.png"),
+    new File(s"${imagePath}goodEvil.png"),
+    new File(s"${imagePath}universe.png"))
 
   val headerList = DataGenerator.getDataToPublish.imageHeaderData
 
