@@ -25,8 +25,8 @@ object ThreeMessageProducer extends App {
 
   println(s"------------------${System.getProperty("user.dir")}-----------------")
 
-  val currentPath = System.getenv("user.dir")
-  val imagePath = s"$currentPath/src/main/resources/"
+  val currentPath = System.getProperty("user.dir")
+  val imagePath = s"$currentPath/src/main/resources/images/"
   val fileList: List[File] = List(new File(s"${imagePath}beginingEnd.png"),
     new File(s"${imagePath}karma.png"),
     new File(s"${imagePath}moksha.png"),
@@ -54,6 +54,9 @@ object ThreeMessageProducer extends App {
     val jsonBytes = write(data).getBytes
     writeToKafka("Image_Data", data.image_Id, jsonBytes)
   })
+
+  println("=================Press enter to publish images")
+  readLine()
 
   headerList.zip(fileList).foreach{
     case (imageHeaderData: ImageHeaderData, file: File) =>
