@@ -67,7 +67,7 @@ object DataGenerator {
     })
 
     val (gpsList, imuList): (List[GPSData], List[IMUData]) = gpsDataimuDataList
-      .foldLeft(List.empty[GPSData], List.empty[IMUData])((splitedData, bothData) => (bothData._1 :: splitedData._1,bothData._2 :: splitedData._2) )
+      .foldLeft(List.empty[GPSData], List.empty[IMUData])((splitedData, bothData) => (splitedData._1 ::: List(bothData._1), splitedData._2 ::: List(bothData._2)) )
 
     PublisherModel(imageHeaderDataList, gpsList, imuList)
   }
