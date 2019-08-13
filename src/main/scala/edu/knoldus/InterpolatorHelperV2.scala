@@ -13,7 +13,7 @@ object InterpolatorHelperV2 extends App {
 
   FutureHelper.publishImageHeader
   FutureHelper.publishGPSData
+  FutureHelper.publishIMUData
 
-
-  Thread.sleep(100000)
+  Thread.sleep(10000)
 }

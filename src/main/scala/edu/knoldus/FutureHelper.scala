@@ -26,4 +26,12 @@ object FutureHelper {
       Thread.sleep(10)
     })
   }
+
+
+  def publishIMUData = Future {
+    publisherModel.imuData.foreach(imuData => {
+      DataProducer.writeToKafka("Image_IMU", imuData.imu_Id, write(imuData.copy(imu_Time = System.currentTimeMillis())))
+      Thread.sleep(10)
+    })
+  }
 }
