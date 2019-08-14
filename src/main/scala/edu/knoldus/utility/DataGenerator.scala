@@ -9,7 +9,7 @@ object DataGenerator {
   private def getImageHeaderData: List[ImageHeaderData] = {
     (1 to 10).map(_ => {
       val imageId = java.util.UUID.randomUUID().toString
-      val cameraId = java.util.UUID.randomUUID().toString
+      val cameraId = "ASD$1231241"
       Thread.sleep(100)
       ImageHeaderData(imageId,
         "unitId",
