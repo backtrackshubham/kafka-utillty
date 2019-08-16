@@ -11,11 +11,11 @@ object InterpolatorHelper extends App {
   val publisherModel: DataGenerator.PublisherModel = DataGenerator.getDataToPublish
 
   publisherModel.imageHeaderData.foreach(imageData => {
-    DataProducer.writeToKafka("Image_Header", imageData.image_Id, write(imageData))
+    DataProducer.writeToKafka("Image_Header", imageData.imageId, write(imageData))
   })
 
   publisherModel.gpsData.foreach(gpsData => {
-    DataProducer.writeToKafka("Image_GPS", gpsData.gps_id, write(gpsData))
+    DataProducer.writeToKafka("Image_GPS", gpsData.gpsId, write(gpsData))
   })
 //  DataProducer.closeProducer
 }

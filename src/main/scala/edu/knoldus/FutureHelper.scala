@@ -39,9 +39,9 @@ object FutureHelper {
       case (imageHeaderData: ImageHeaderData, file: File) =>
         val byteArray = Files.readAllBytes(file.toPath)
         println("Writing data")
-        DataProducer.writeToKafka("Image_Header2", imageHeaderData.camera_Id, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
-        DataProducer.writeToKafka("Image_Header2", s"${imageHeaderData.image_Id}-L" , byteArray)
-        DataProducer.writeToKafka("Image_Header2", s"${imageHeaderData.image_Id}-R", byteArray)
+        DataProducer.writeToKafka("Image_Header2", imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
+        DataProducer.writeToKafka("Image_Header2", s"${imageHeaderData.imageId}-L" , byteArray)
+        DataProducer.writeToKafka("Image_Header2", s"${imageHeaderData.imageId}-R", byteArray)
         Thread.sleep(100)
     }
 
@@ -49,7 +49,7 @@ object FutureHelper {
 
   def publishGPSData = Future {
     publisherModel.gpsData.foreach(gpsData => {
-      DataProducer.writeToKafka("Camera_GPS", gpsData.camera_Id, write(gpsData.copy(gps_Time_UTC = System.currentTimeMillis())))
+      DataProducer.writeToKafka("Camera_GPS", gpsData.cameraId, write(gpsData.copy(timestamp_Linux = System.currentTimeMillis())))
       Thread.sleep(100)
     })
   }
@@ -57,7 +57,7 @@ object FutureHelper {
 
   def publishIMUData = Future {
     publisherModel.imuData.foreach(imuData => {
-      DataProducer.writeToKafka("Camera_IMU", imuData.camera_id, write(imuData.copy(imu_Time = System.currentTimeMillis())))
+      DataProducer.writeToKafka("Camera_IMU", imuData.cameraId, write(imuData.copy(timestampLinux = System.currentTimeMillis())))
       Thread.sleep(10)
     })
   }

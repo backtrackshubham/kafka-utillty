@@ -51,7 +51,7 @@ object FileProducer extends App {
     case (imageHeaderData: ImageHeaderData, file: File) =>
       val byteArray = Files.readAllBytes(file.toPath)
       println("Writing data")
-      writeToKafka("Image_Data", imageHeaderData.image_Id, byteArray, imageHeaderData)
+      writeToKafka("Image_Data", imageHeaderData.imageId, byteArray, imageHeaderData)
   }
 //
 //  fileList.foreach(file => {

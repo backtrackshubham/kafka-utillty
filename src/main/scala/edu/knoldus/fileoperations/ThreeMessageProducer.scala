@@ -53,7 +53,7 @@ object ThreeMessageProducer extends App {
 
   headerList.foreach(data => {
     val jsonBytes = write(data).getBytes
-    writeToKafka("Image_Header", data.image_Id, jsonBytes)
+    writeToKafka("Image_Header", data.imageId, jsonBytes)
   })
 
   println("=================Press enter to publish images")
@@ -63,8 +63,8 @@ object ThreeMessageProducer extends App {
     case (imageHeaderData: ImageHeaderData, file: File) =>
       val byteArray = Files.readAllBytes(file.toPath)
       println("Writing data")
-      writeToKafka("Image_Header", s"${imageHeaderData.image_Id}-L" , byteArray)
-      writeToKafka("Image_Header", s"${imageHeaderData.image_Id}-R", byteArray)
+      writeToKafka("Image_Header", s"${imageHeaderData.imageId}-L" , byteArray)
+      writeToKafka("Image_Header", s"${imageHeaderData.imageId}-R", byteArray)
   }
   //
   //  fileList.foreach(file => {

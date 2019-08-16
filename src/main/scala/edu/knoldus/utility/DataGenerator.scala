@@ -1,5 +1,8 @@
 package edu.knoldus.utility
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import edu.knoldus.model.{GPSData, Gyro, IMUData, ImageHeaderData, LinAcc, Magnetometer, Quaternion}
 
 object DataGenerator {
@@ -14,8 +17,6 @@ object DataGenerator {
       ImageHeaderData(imageId,
         "unitId",
         cameraId,
-        None,
-        None,
         "ipAddress",
         System.currentTimeMillis(),
         0.0f,
@@ -37,32 +38,35 @@ object DataGenerator {
     val imageHeaderDataList = getImageHeaderData
     val gpsDataimuDataList: List[(GPSData, IMUData)] = imageHeaderDataList.flatMap(imageHeaderData => {
       (1 to 10).map(count => {
-        (GPSData("gpsId",
+        (GPSData(
+          "gpsId",
           "imageId",
-          imageHeaderData.camera_Id,
-          imageHeaderData.unit_Id,
-          count,
-          getGpsTime(imageHeaderData.timestamp,
-            count),
-          "gpsDate",
-          "gpsLat",
-          "gpsLong",
+          imageHeaderData.cameraId,
+          getGpsTime(imageHeaderData.timestamp,count),
+          getGpsTime(imageHeaderData.timestamp,count),
+          new SimpleDateFormat("MMddyy").format(new Date()),
+          "latitude",
+          "N",
+          "longitude",
+          "W",
           5.6,
           36.96,
-          5,
-          0.0f,
           true,
-          false),
+          None,
+          None
+          ),
          IMUData("imuId",
-          imageHeaderData.camera_Id,
-          imageHeaderData.unit_Id,
+          imageHeaderData.cameraId,
           "imageId",
           getGpsTime(imageHeaderData.timestamp, count + 1),
           getGpsTime(imageHeaderData.timestamp, count + 1),
            LinAcc(1,2,3),
            Magnetometer(7,8,9),
            Gyro(4,5,6),
-           Quaternion(9, 6, 3, 8)))
+           Quaternion(9, 6, 3, 8),
+           None,
+           None
+         ))
       }).toList
     })
 

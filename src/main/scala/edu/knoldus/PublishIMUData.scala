@@ -17,7 +17,7 @@ object PublishIMUData {
     val imuData: List[IMUData] = FileUtility.readIMUDataJsonFile("/home/freaks/SHUBHAM/Projects/KERB/kerb-kafka-publisher/src/main/resources/imu.json")
 
     imuData.foreach(imu => {
-      DataProducer.writeToKafka(IMAGE_IMU_TOPIC, imu.image_id, write(imu))
+      DataProducer.writeToKafka(IMAGE_IMU_TOPIC, imu.imageId, write(imu))
     })
 
     DataProducer.closeProducer

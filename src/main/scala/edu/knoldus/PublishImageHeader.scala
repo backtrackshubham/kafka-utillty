@@ -17,7 +17,7 @@ object PublishImageHeader {
     val imageHeaderObjects: List[ImageHeaderData] = FileUtility.readImageHeaderJsonFile("/home/freaks/SHUBHAM/Projects/KERB/kerb-kafka-publisher/src/main/resources/image-header.json")
 
     imageHeaderObjects.foreach(imageHeader => {
-      DataProducer.writeToKafka(IMAGE_HEADER_TOPIC, imageHeader.image_Id, write(imageHeader))
+      DataProducer.writeToKafka(IMAGE_HEADER_TOPIC, imageHeader.imageId, write(imageHeader))
     })
 
     DataProducer.closeProducer
