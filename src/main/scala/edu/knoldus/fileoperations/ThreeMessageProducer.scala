@@ -17,8 +17,8 @@ object ThreeMessageProducer extends App {
   implicit val formats = DefaultFormats
 
   private val props = new Properties()
-//  props.put("bootstrap.servers", "localhost:9092")
-  props.put("bootstrap.servers", "13.90.249.246:9092")
+  props.put("bootstrap.servers", "localhost:9092")
+//  props.put("bootstrap.servers", "13.90.249.246:9092")
   props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer")
   props.put("max.request.size", "1048576")
@@ -63,8 +63,8 @@ object ThreeMessageProducer extends App {
     case (imageHeaderData: ImageHeaderData, file: File) =>
       val byteArray = Files.readAllBytes(file.toPath)
       println("Writing data")
-      writeToKafka("Image_Header", s"${imageHeaderData.imageId}-L" , byteArray)
-      writeToKafka("Image_Header", s"${imageHeaderData.imageId}-R", byteArray)
+      writeToKafka("Image_Header", s"${imageHeaderData.imageId}-L.png" , byteArray)
+      writeToKafka("Image_Header", s"${imageHeaderData.imageId}-R.png", byteArray)
   }
   //
   //  fileList.foreach(file => {

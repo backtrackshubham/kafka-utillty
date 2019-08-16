@@ -39,9 +39,9 @@ object FutureHelper {
       case (imageHeaderData: ImageHeaderData, file: File) =>
         val byteArray = Files.readAllBytes(file.toPath)
         println("Writing data")
-        DataProducer.writeToKafka("Image_Header2", imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
-        DataProducer.writeToKafka("Image_Header2", s"${imageHeaderData.imageId}-L" , byteArray)
-        DataProducer.writeToKafka("Image_Header2", s"${imageHeaderData.imageId}-R", byteArray)
+        DataProducer.writeToKafka("Image_Header", imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
+        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-L.png" , byteArray)
+        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-R.png", byteArray)
         Thread.sleep(100)
     }
 
