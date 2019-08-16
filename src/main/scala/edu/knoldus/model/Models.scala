@@ -48,7 +48,7 @@ case class GPSData(
                     gpsId: String,
                     imageId: String,
                     cameraId: String,
-                    timestamp_Linux: Long,
+                    timestampLinux: Long,
                     timeUTC: Long,
                     date : String,
                     latitude: String,
@@ -58,7 +58,7 @@ case class GPSData(
                     speedKnots: Double,
                     angle: Double,
                     fix: Boolean,
-                    imageHeaderTimestamp : Option[Long] ,
+                    imageHeaderTimestamp : Option[Long],
                     unitId: Option[String]
                   )
 

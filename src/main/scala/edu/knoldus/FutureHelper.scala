@@ -49,7 +49,7 @@ object FutureHelper {
 
   def publishGPSData = Future {
     publisherModel.gpsData.foreach(gpsData => {
-      DataProducer.writeToKafka("Camera_GPS", gpsData.cameraId, write(gpsData.copy(timestamp_Linux = System.currentTimeMillis())))
+      DataProducer.writeToKafka("Camera_GPS", gpsData.cameraId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
       Thread.sleep(100)
     })
   }
