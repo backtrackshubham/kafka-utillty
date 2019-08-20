@@ -16,8 +16,7 @@ case class ImageHeaderData(
                             whiteBalanceBlue: Int,
                             whiteBalanceRed: Int,
                             stereoSep: Option[Double],
-                            hdfsUrlLeft: Option[String],
-                            hdfsUrlRight: Option[String]
+                            imageCounter: Int
                           )
 
 

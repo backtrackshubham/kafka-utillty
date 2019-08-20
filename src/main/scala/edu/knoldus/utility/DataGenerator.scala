@@ -10,11 +10,11 @@ object DataGenerator {
   case class PublisherModel(imageHeaderData: List[ImageHeaderData], gpsData: List[GPSData], imuData: List[IMUData])
   val getGpsTime: (Long, Int) => Long = (time: Long, count: Int) => if(count % 2 == 0) time + count else time - count
   private def getImageHeaderData: List[ImageHeaderData] = {
-    (1 to 10).map(_ => {
+    (1 to 10).map(count => {
       val imageId = java.util.UUID.randomUUID().toString
       val cameraId = "ASD$1231241"
       Thread.sleep(100)
-      ImageHeaderData(imageId,
+      ImageHeaderData(s"$imageId-$count",
         "unitId",
         cameraId,
         "ipAddress",
@@ -29,8 +29,7 @@ object DataGenerator {
         5,
         9,
         None,
-        None,
-        None)
+        count)
     }).toList
   }
 
