@@ -3,11 +3,16 @@ package edu.knoldus.utility
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import edu.knoldus.model.{GPSData, Gyro, IMUData, ImageHeaderData, LinAcc, Magnetometer, Quaternion}
+import edu.knoldus.model.{BoundingBox, GPSData, Gyro, IMUData, ImageHeaderData, ImageObjects, LinAcc, Magnetometer, ObjectItem, Quaternion}
 
 object DataGenerator {
+  val DATE_FORMAT = "dd-MM-yy HH:mm:ss SSS"
+  val formatter = new SimpleDateFormat(DATE_FORMAT)
 
-  case class PublisherModel(imageHeaderData: List[ImageHeaderData], gpsData: List[GPSData], imuData: List[IMUData])
+  case class PublisherModel(imageHeaderData: List[ImageHeaderData],
+                            gpsData: List[GPSData],
+                            imuData: List[IMUData],
+                            imageObjects: List[ImageObjects]= List.empty[ImageObjects])
   val getGpsTime: (Long, Int) => Long = (time: Long, count: Int) => if(count % 2 == 0) time + count else time - count
   private def getImageHeaderData: List[ImageHeaderData] = {
     (1 to 10).map(count => {
@@ -70,8 +75,30 @@ object DataGenerator {
     })
 
     val (gpsList, imuList): (List[GPSData], List[IMUData]) = gpsDataimuDataList
-      .foldLeft(List.empty[GPSData], List.empty[IMUData])((splitedData, bothData) => (splitedData._1 ::: List(bothData._1), splitedData._2 ::: List(bothData._2)) )
+      .foldLeft(List.empty[GPSData], List.empty[IMUData])((splitedData, bothData) => (splitedData._1 ::: List(bothData._1), splitedData._2 ::: List(bothData._2)))
+    val imageObjects: List[ImageObjects] = imageHeaderDataList.zipWithIndex.map{
+      case (headerData, index) =>
+        val objectDetectorId = java.util.UUID.randomUUID.toString
+        ImageObjects(
+          headerData.imageId,
+          objectDetectorId,
+          (1 to 5).map(value => {
+            ObjectItem(
+              value * index,
+              headerData.imageId,
+              value,
+              5.6,
+              value,
+              index,
+              BoundingBox(index, value,index, value),
+              "VfCqD8wz",
+              Some("map")
+            )
+          }).toList,
+          formatter.format(new Date())
+        )
+    }
 
-    PublisherModel(imageHeaderDataList, gpsList, imuList)
+    PublisherModel(imageHeaderDataList, gpsList, imuList, imageObjects)
   }
 }

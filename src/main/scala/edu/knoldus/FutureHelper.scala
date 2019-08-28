@@ -17,7 +17,7 @@ object FutureHelper {
 
   val publisherModel: DataGenerator.PublisherModel = DataGenerator.getDataToPublish
 
-  val currentPath = System.getProperty("user.dir")
+  val currentPath: String = System.getProperty("user.dir")
   val imagePath = s"$currentPath/src/main/resources/images/"
   val fileList: List[File] = List(new File(s"${imagePath}beginingEnd.png"),
     new File(s"${imagePath}karma.png"),
@@ -30,7 +30,7 @@ object FutureHelper {
     new File(s"${imagePath}goodEvil.png"),
     new File(s"${imagePath}universe.png"))
 
-  val headerList = publisherModel.imageHeaderData
+  val headerList: List[ImageHeaderData] = publisherModel.imageHeaderData
 
 
 
@@ -62,5 +62,51 @@ object FutureHelper {
     })
   }
 
+  def publishImageObjects = Future{
+    publisherModel.imageObjects.foreach{imageObject =>
+      DataProducer.writeToKafka("Image_Objects", imageObject.imageId, write(imageObject))
+      Thread.sleep(10)
+    }
+  }
+
+
+  def publishSingleImageHeader = Future {
+    headerList.zip(fileList).zipWithIndex.head match {
+      case ((imageHeaderData: ImageHeaderData, file: File), index) =>
+        val byteArray = Files.readAllBytes(file.toPath)
+        println("Writing data")
+        DataProducer.writeToKafka("Image_Header", imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
+        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-L.png" , byteArray)
+        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-R.png", byteArray)
+        Thread.sleep(100)
+    }
+
+  }
+
+  def publishSingleGPSData = Future {
+    publisherModel.gpsData.head match {
+      case gpsData => {
+        DataProducer.writeToKafka("Camera_GPS", gpsData.cameraId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
+        Thread.sleep(100)
+      }
+    }
+  }
+
+
+  def publishSingleIMUData = Future {
+    publisherModel.imuData.head match {
+      case imuData => {
+        DataProducer.writeToKafka("Camera_IMU", imuData.cameraId, write(imuData.copy(timestampLinux = System.currentTimeMillis())))
+        Thread.sleep(10)
+      }
+    }
+  }
+
+  def publishSingleImageObjects = Future{
+    publisherModel.imageObjects.head match {case imageObject =>
+      DataProducer.writeToKafka("Image_Objects", imageObject.imageId, write(imageObject))
+      Thread.sleep(10)
+    }
+  }
 
 }

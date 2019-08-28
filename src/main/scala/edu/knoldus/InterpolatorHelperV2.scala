@@ -14,6 +14,7 @@ object InterpolatorHelperV2 extends App {
   FutureHelper.publishImageHeader
   FutureHelper.publishGPSData
   FutureHelper.publishIMUData
+  FutureHelper.publishImageObjects
 
   Thread.sleep(10000)
 }
