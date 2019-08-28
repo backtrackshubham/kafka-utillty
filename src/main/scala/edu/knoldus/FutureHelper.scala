@@ -39,9 +39,9 @@ object FutureHelper {
       case ((imageHeaderData: ImageHeaderData, file: File), index) =>
         val byteArray = Files.readAllBytes(file.toPath)
         println("Writing data")
-        DataProducer.writeToKafka("Image_Header", imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
-        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-L.png" , byteArray)
-        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-R.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${imageHeaderData.imageId}-L.png" , byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${imageHeaderData.imageId}-R.png", byteArray)
         Thread.sleep(100)
     }
 
@@ -49,7 +49,7 @@ object FutureHelper {
 
   def publishGPSData = Future {
     publisherModel.gpsData.foreach(gpsData => {
-      DataProducer.writeToKafka("Camera_GPS", gpsData.cameraId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
+      DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, gpsData.cameraId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
       Thread.sleep(100)
     })
   }
@@ -57,7 +57,7 @@ object FutureHelper {
 
   def publishIMUData = Future {
     publisherModel.imuData.foreach(imuData => {
-      DataProducer.writeToKafka("Camera_IMU", imuData.cameraId, write(imuData.copy(timestampLinux = System.currentTimeMillis())))
+      DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, imuData.cameraId, write(imuData.copy(timestampLinux = System.currentTimeMillis())))
       Thread.sleep(10)
     })
   }
@@ -75,9 +75,9 @@ object FutureHelper {
       case ((imageHeaderData: ImageHeaderData, file: File), index) =>
         val byteArray = Files.readAllBytes(file.toPath)
         println("Writing data")
-        DataProducer.writeToKafka("Image_Header", imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
-        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-L.png" , byteArray)
-        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-R.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${imageHeaderData.imageId}-L.png" , byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${imageHeaderData.imageId}-R.png", byteArray)
         Thread.sleep(100)
     }
 
@@ -86,7 +86,7 @@ object FutureHelper {
   def publishSingleGPSData = Future {
     publisherModel.gpsData.head match {
       case gpsData => {
-        DataProducer.writeToKafka("Camera_GPS", gpsData.cameraId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
+        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, gpsData.cameraId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
         Thread.sleep(100)
       }
     }
@@ -96,7 +96,7 @@ object FutureHelper {
   def publishSingleIMUData = Future {
     publisherModel.imuData.head match {
       case imuData => {
-        DataProducer.writeToKafka("Camera_IMU", imuData.cameraId, write(imuData.copy(timestampLinux = System.currentTimeMillis())))
+        DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, imuData.cameraId, write(imuData.copy(timestampLinux = System.currentTimeMillis())))
         Thread.sleep(10)
       }
     }
@@ -104,7 +104,7 @@ object FutureHelper {
 
   def publishSingleImageObjects = Future{
     publisherModel.imageObjects.head match {case imageObject =>
-      DataProducer.writeToKafka("Image_Objects", imageObject.imageId, write(imageObject))
+      DataProducer.writeToKafka(ConfigConstants.imageObjects, imageObject.imageId, write(imageObject))
       Thread.sleep(10)
     }
   }

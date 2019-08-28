@@ -29,9 +29,9 @@ object BombardierData extends App {
       imagesPerCamera.zipWithIndex.foreach { case (file, index: Int) =>
         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         println("Writing image header")
-        DataProducer.writeToKafka("Image_Header", camera, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", cameraId = camera)))
-        DataProducer.writeToKafka("Image_Header", s"$imageId-$index-L.png", byteArray)
-        DataProducer.writeToKafka("Image_Header", s"$imageId-$index-R.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, camera, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", cameraId = camera)))
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"$imageId-$index-L.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"$imageId-$index-R.png", byteArray)
         Thread.sleep(100)
       }
     })
@@ -41,7 +41,7 @@ object BombardierData extends App {
     cameraIds foreach {camera =>
       imagesPerCamera.foreach { _ =>
         println("Writing GPS data")
-        DataProducer.writeToKafka("Camera_GPS", camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
+        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
         Thread.sleep(100)
       }
     }
@@ -53,7 +53,7 @@ object BombardierData extends App {
       imagesPerCamera.foreach { _ =>
         println("Writing IMU data")
         (1 to 10) foreach { _ =>
-          DataProducer.writeToKafka("Camera_IMU", camera, write(imuData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
+          DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, camera, write(imuData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
           Thread.sleep(10)
         }
       }

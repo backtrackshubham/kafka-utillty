@@ -1,9 +1,9 @@
 package edu.knoldus.fileoperations
 
 import net.liftweb.json._
-
 import java.util.{Collections, Properties}
 
+import edu.knoldus.ConfigConstants
 import edu.knoldus.model.DetectorData
 import org.apache.kafka.clients.consumer.KafkaConsumer
 
@@ -11,7 +11,7 @@ object FileConsumer extends App {
   implicit val formats = DefaultFormats
 
   val props = new Properties()
-  props.put("bootstrap.servers", "localhost:9092")
+  props.put("bootstrap.servers", ConfigConstants.kafkaBootStrapServer)
   props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
   props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
   props.put("auto.offset.reset", "earliest")
