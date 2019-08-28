@@ -43,7 +43,7 @@ object DataGenerator {
           imageHeaderData.cameraId,
           getGpsTime(imageHeaderData.timestamp,count),
           "153215.456",
-          new SimpleDateFormat("MMddyy").format(new Date()),
+          new SimpleDateFormat("ddMMyy").format(new Date()),
           "latitude",
           "N",
           "longitude",

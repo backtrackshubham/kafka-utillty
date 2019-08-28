@@ -53,7 +53,7 @@ object BombardierData extends App {
       imagesPerCamera.foreach { _ =>
         println("Writing IMU data")
         (1 to 10) foreach { _ =>
-          DataProducer.writeToKafka("Camera_GPS", camera, write(imuData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
+          DataProducer.writeToKafka("Camera_IMU", camera, write(imuData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
           Thread.sleep(10)
         }
       }

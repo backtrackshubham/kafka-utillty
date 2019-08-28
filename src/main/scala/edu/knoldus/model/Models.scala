@@ -108,3 +108,13 @@ case class Quaternion(
                        z: Int,
                        w: Int
                      )
+case class DetectorData(imageId: String,
+                        unitId: String,
+                        cameraId: String,
+                        timestamp: Long,
+                        gpsData: GPSData,
+                        imuData: IMUData,
+                        imageLeftUrl: String,
+                        imageRightUrl: String
+                       )
+
