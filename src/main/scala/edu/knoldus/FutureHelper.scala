@@ -40,8 +40,8 @@ object FutureHelper {
         val byteArray = Files.readAllBytes(file.toPath)
         println("Writing data")
         DataProducer.writeToKafka("Image_Header", imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
-        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-$index-L.png" , byteArray)
-        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-$index-R.png", byteArray)
+        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-L.png" , byteArray)
+        DataProducer.writeToKafka("Image_Header", s"${imageHeaderData.imageId}-R.png", byteArray)
         Thread.sleep(100)
     }
 
