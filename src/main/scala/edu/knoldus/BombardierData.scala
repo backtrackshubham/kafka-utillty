@@ -59,7 +59,17 @@ object BombardierData extends App {
       }
     }
   }
-
+  //  def publishImageObjects = Future {
+  //    cameraIds foreach {camera =>
+  //      imagesPerCamera.foreach { _ =>
+  //        println("Writing IMU data")
+  //        (1 to 10) foreach { _ =>
+  //          DataProducer.writeToKafka(ConfigConstants.imageObjects, camera, write(imuData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
+  //          Thread.sleep(10)
+  //        }
+  //      }
+  //    }
+  //  }
   publishImageHeader
   publishGPSData
   publishIMUData
