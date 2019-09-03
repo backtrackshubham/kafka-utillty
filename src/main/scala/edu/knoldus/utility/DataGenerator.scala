@@ -12,15 +12,16 @@ object DataGenerator {
   case class PublisherModel(imageHeaderData: List[ImageHeaderData],
                             gpsData: List[GPSData],
                             imuData: List[IMUData],
-                            imageObjects: List[ImageObjects]= List.empty[ImageObjects])
+                            imageObjects: List[ImageObjects])
   val getGpsTime: (Long, Int) => Long = (time: Long, count: Int) => if(count % 2 == 0) time + count else time - count
   private def getImageHeaderData: List[ImageHeaderData] = {
+    val unitId = java.util.UUID.randomUUID().toString
     (1 to 10).map(count => {
       val imageId = java.util.UUID.randomUUID().toString
       val cameraId = "ASD$1231241"
       Thread.sleep(100)
       ImageHeaderData(s"$imageId-$count",
-        "unitId",
+        unitId,
         cameraId,
         "ipAddress",
         System.currentTimeMillis(),
@@ -40,7 +41,7 @@ object DataGenerator {
 
   def getDataToPublish: PublisherModel = {
     val imageHeaderDataList = getImageHeaderData
-    val gpsDataimuDataList: List[(GPSData, IMUData)] = imageHeaderDataList.flatMap(imageHeaderData => {
+    val gpsDataImuDataList: List[(GPSData, IMUData)] = imageHeaderDataList.flatMap(imageHeaderData => {
       (1 to 10).map(count => {
         (GPSData(
           "gpsId",
@@ -74,8 +75,10 @@ object DataGenerator {
       }).toList
     })
 
-    val (gpsList, imuList): (List[GPSData], List[IMUData]) = gpsDataimuDataList
+    val (gpsList, imuList): (List[GPSData], List[IMUData]) = gpsDataImuDataList
       .foldLeft(List.empty[GPSData], List.empty[IMUData])((splitedData, bothData) => (splitedData._1 ::: List(bothData._1), splitedData._2 ::: List(bothData._2)))
+
+
     val imageObjects: List[ImageObjects] = imageHeaderDataList.zipWithIndex.map{
       case (headerData, index) =>
         val objectDetectorId = java.util.UUID.randomUUID.toString
@@ -84,7 +87,7 @@ object DataGenerator {
           objectDetectorId,
           (1 to 5).map(value => {
             ObjectItem(
-              value * index,
+              (value * index + 1) ,
               headerData.imageId,
               value,
               5.6,

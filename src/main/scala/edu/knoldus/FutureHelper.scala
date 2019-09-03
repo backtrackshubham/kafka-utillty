@@ -37,11 +37,13 @@ object FutureHelper {
   def publishImageHeader = Future {
     headerList.zip(fileList).zipWithIndex.foreach{
       case ((imageHeaderData: ImageHeaderData, file: File), index) =>
+
         val byteArray = Files.readAllBytes(file.toPath)
         println("Writing data")
+        println(s"publishing header for ${imageHeaderData.imageId}")
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${imageHeaderData.imageId}-L.png" , byteArray)
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${imageHeaderData.imageId}-R.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${imageHeaderData.unitId}_${imageHeaderData.imageId}-L.png" , byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${imageHeaderData.unitId}_${imageHeaderData.imageId}-R.png", byteArray)
         Thread.sleep(100)
     }
 
@@ -63,7 +65,9 @@ object FutureHelper {
   }
 
   def publishImageObjects = Future{
+    println(write(publisherModel.imageObjects))
     publisherModel.imageObjects.foreach{imageObject =>
+      println(s"publishing objects for ${imageObject.imageId}")
       DataProducer.writeToKafka("Image_Objects", imageObject.imageId, write(imageObject))
       Thread.sleep(10)
     }

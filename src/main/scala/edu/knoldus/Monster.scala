@@ -11,28 +11,27 @@ import net.liftweb.json.Serialization.write
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object BombardierData extends App {
+object Monster extends App {
   implicit val formats: DefaultFormats.type = DefaultFormats
 
-  val imagesPerCamera: List[File] = FutureHelper.fileList.flatMap(element => (1 to 10).map(_ => element))
+  val imagesPerCamera: List[File] = FutureHelper.fileList.flatMap(element => (1 to 10000).map(_ => element))
   val cameraId = "ASD$1231241"
-  val cameraIds = (1 to 10).map(count => s"$cameraId-$count")
+  val cameraIds = (1 to 100).map(count => s"$cameraId-$count")
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
   val imuData = DataGenerator.getDataToPublish.imuData.head
 
-  println(s"GPS ${DataGenerator.getDataToPublish.gpsData.length}\n =IMU ${DataGenerator.getDataToPublish.imuData.length}\nImageHeader = ${DataGenerator.getDataToPublish.imageHeaderData.length}")
+  println(s"GPS ${DataGenerator.getDataToPublish.gpsData.length}\n =IMU ${DataGenerator.getDataToPublish.imuData.length}\nImageHeader = ${imagesPerCamera.length}")
 
   def publishImageHeader = Future {
     cameraIds.foreach(camera => {
       val imageId = java.util.UUID.randomUUID().toString
-      val unitId = java.util.UUID.randomUUID().toString
       imagesPerCamera.zipWithIndex.foreach { case (file, index: Int) =>
         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         println("Writing image header")
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, camera, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", cameraId = camera)))
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${unitId}_$imageId-$index-L.png", byteArray)
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${unitId}_$imageId-$index-R.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"$imageId-$index-L.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"$imageId-$index-R.png", byteArray)
         Thread.sleep(100)
       }
     })
@@ -72,8 +71,8 @@ object BombardierData extends App {
   //    }
   //  }
   publishImageHeader
-  publishGPSData
-  publishIMUData
+  //  publishGPSData
+  //  publishIMUData
 
   Thread.sleep(600000)
 
