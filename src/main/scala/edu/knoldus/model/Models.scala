@@ -16,7 +16,7 @@ case class ImageHeaderData(
                             whiteBalanceBlue: Int,
                             whiteBalanceRed: Int,
                             stereoSep: Option[Double],
-                            imageCounter: Int
+                            imageCounter: Long
                           )
 
 
@@ -64,16 +64,15 @@ case class GPSData(
 
 case class IMUData(
                     imuId: String,
-                    cameraId: String,
                     time: Long,
-                    timestampLinux: Long,
-                    imageId: String,
+                    timeStampLinux: Long,
+                    imageId: Option[String],
                     linAcc: LinAcc,
                     magnetometer: Magnetometer,
                     gyroscope: Gyro,
                     quaternion: Quaternion,
-                    imageHeaderTimestamp : Option[Long],
-                    unitId: Option[String]
+                    unitId: String,
+                    imageCounter: Option[Long]
                   )
 
 
@@ -95,9 +94,9 @@ case class Magnetometer(
 
 
 case class Gyro(
-                 alpha: Int,
-                 beta: Int,
-                 gamma: Int
+                 x: Int,
+                 y: Int,
+                 z: Int
                )
 
 

@@ -59,7 +59,7 @@ object FutureHelper {
 
   def publishIMUData = Future {
     publisherModel.imuData.foreach(imuData => {
-      DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, imuData.cameraId, write(imuData.copy(timestampLinux = System.currentTimeMillis())))
+      DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, imuData.unitId, write(imuData.copy(timeStampLinux = System.currentTimeMillis())))
       Thread.sleep(10)
     })
   }
@@ -100,7 +100,7 @@ object FutureHelper {
   def publishSingleIMUData = Future {
     publisherModel.imuData.head match {
       case imuData => {
-        DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, imuData.cameraId, write(imuData.copy(timestampLinux = System.currentTimeMillis())))
+        DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, imuData.unitId, write(imuData.copy(timeStampLinux = System.currentTimeMillis())))
         Thread.sleep(10)
       }
     }

@@ -61,15 +61,14 @@ object DataGenerator {
           None
           ),
          IMUData("imuId",
-          imageHeaderData.cameraId,
           getGpsTime(imageHeaderData.timestamp, count + 1),
            getGpsTime(imageHeaderData.timestamp, count + 1),
-           "imageId",
+           None,
            LinAcc(1,2,3),
            Magnetometer(7,8,9),
            Gyro(4,5,6),
            Quaternion(9, 6, 3, 8),
-           None,
+           "None",
            None
          ))
       }).toList

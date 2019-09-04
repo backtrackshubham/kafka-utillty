@@ -53,7 +53,7 @@ object Monster extends App {
       imagesPerCamera.foreach { _ =>
         println("Writing IMU data")
         (1 to 10) foreach { _ =>
-          DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, camera, write(imuData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
+          DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, camera, write(imuData.copy(timeStampLinux = System.currentTimeMillis(), unitId = camera)))
           Thread.sleep(10)
         }
       }

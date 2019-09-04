@@ -17,6 +17,7 @@ object BombardierData extends App {
   val imagesPerCamera: List[File] = FutureHelper.fileList.flatMap(element => (1 to 10).map(_ => element))
   val cameraId = "ASD$1231241"
   val cameraIds = (1 to 10).map(count => s"$cameraId-$count")
+  val unitIds = (1 to 10).map(_ => java.util.UUID.randomUUID.toString)
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
   val imuData = DataGenerator.getDataToPublish.imuData.head
@@ -24,13 +25,12 @@ object BombardierData extends App {
   println(s"GPS ${DataGenerator.getDataToPublish.gpsData.length}\n =IMU ${DataGenerator.getDataToPublish.imuData.length}\nImageHeader = ${DataGenerator.getDataToPublish.imageHeaderData.length}")
 
   def publishImageHeader = Future {
-    cameraIds.foreach(camera => {
+    unitIds.foreach(unitId => {
       val imageId = java.util.UUID.randomUUID().toString
-      val unitId = java.util.UUID.randomUUID().toString
       imagesPerCamera.zipWithIndex.foreach { case (file, index: Int) =>
         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         println("Writing image header")
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, camera, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", cameraId = camera)))
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${unitId}_$imageId-$index-L.png", byteArray)
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${unitId}_$imageId-$index-R.png", byteArray)
         Thread.sleep(100)
@@ -39,10 +39,10 @@ object BombardierData extends App {
   }
 
   def publishGPSData = Future {
-    cameraIds foreach {camera =>
+    unitIds foreach {camera =>
       imagesPerCamera.foreach { _ =>
         println("Writing GPS data")
-        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
+        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = Some(camera))))
         Thread.sleep(100)
       }
     }
@@ -50,11 +50,11 @@ object BombardierData extends App {
 
 
   def publishIMUData = Future {
-    cameraIds foreach {camera =>
+    unitIds foreach {camera =>
       imagesPerCamera.foreach { _ =>
         println("Writing IMU data")
         (1 to 10) foreach { _ =>
-          DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, camera, write(imuData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
+          DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, camera, write(imuData.copy(unitId = camera, timeStampLinux = System.currentTimeMillis())))
           Thread.sleep(10)
         }
       }
@@ -72,7 +72,7 @@ object BombardierData extends App {
   //    }
   //  }
   publishImageHeader
-  publishGPSData
+  // publishGPSData
   publishIMUData
 
   Thread.sleep(600000)
