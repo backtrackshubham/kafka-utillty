@@ -1,5 +1,7 @@
 package edu.knoldus.model
 
+import org.apache.avro.data.Json
+
 case class ImageHeaderData(
                             imageId: String,
                             unitId: String,
@@ -45,21 +47,22 @@ case class DiversityMap(lowerX: Double, lowerY: Double, center: Double, upperX: 
 
 case class GPSData(
                     gpsId: String,
-                    imageId: String,
-                    cameraId: String,
+                    imageId: Option[String],
                     timestampLinux: Long,
                     timeUTC: String,
                     date : String,
-                    latitude: String,
+                    latitude: Coordinates,
                     latitudeNS: String,
-                    longitude: String,
+                    longitude: Coordinates,
                     longitudeEW: String,
                     speedKnots: Double,
                     angle: Double,
                     fix: Boolean,
-                    imageHeaderTimestamp : Option[Long],
-                    unitId: Option[String]
+                    imageCounter : Option[Long],
+                    unitId: String
                   )
+
+case class Coordinates(degrees: Int, minutes: Double)
 
 
 case class IMUData(

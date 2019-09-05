@@ -51,7 +51,7 @@ object FutureHelper {
 
   def publishGPSData = Future {
     publisherModel.gpsData.foreach(gpsData => {
-      DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, gpsData.cameraId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
+      DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, gpsData.unitId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
       Thread.sleep(100)
     })
   }
@@ -90,7 +90,7 @@ object FutureHelper {
   def publishSingleGPSData = Future {
     publisherModel.gpsData.head match {
       case gpsData => {
-        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, gpsData.cameraId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
+        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, gpsData.unitId, write(gpsData.copy(timestampLinux = System.currentTimeMillis())))
         Thread.sleep(100)
       }
     }

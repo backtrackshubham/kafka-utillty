@@ -3,7 +3,7 @@ package edu.knoldus.utility
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import edu.knoldus.model.{BoundingBox, GPSData, Gyro, IMUData, ImageHeaderData, ImageObjects, LinAcc, Magnetometer, ObjectItem, Quaternion}
+import edu.knoldus.model.{BoundingBox, Coordinates, GPSData, Gyro, IMUData, ImageHeaderData, ImageObjects, LinAcc, Magnetometer, ObjectItem, Quaternion}
 
 object DataGenerator {
   val DATE_FORMAT = "dd-MM-yy HH:mm:ss SSS"
@@ -45,20 +45,19 @@ object DataGenerator {
       (1 to 10).map(count => {
         (GPSData(
           "gpsId",
-          "imageId",
-          imageHeaderData.cameraId,
+          None,
           getGpsTime(imageHeaderData.timestamp,count),
           "153215.456",
           new SimpleDateFormat("ddMMyy").format(new Date()),
-          "latitude",
+          Coordinates(56, 36.9658),
           "N",
-          "longitude",
+          Coordinates(56, 36.9658),
           "W",
           5.6,
           36.96,
-          true,
+          count % 2 == 0,
           None,
-          None
+          "None"
           ),
          IMUData("imuId",
           getGpsTime(imageHeaderData.timestamp, count + 1),

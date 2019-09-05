@@ -17,7 +17,7 @@ object PublishGPSDataHeader {
     val gpsData: List[GPSData] = FileUtility.readGPSDataJsonFile("/home/freaks/SHUBHAM/Projects/KERB/kerb-kafka-publisher/src/main/resources/gps.json")
 
     gpsData.foreach(gps => {
-      DataProducer.writeToKafka(IMAGE_GPS_TOPIC, gps.imageId, write(gps))
+      DataProducer.writeToKafka(IMAGE_GPS_TOPIC, gps.unitId, write(gps))
     })
 
     DataProducer.closeProducer

@@ -42,7 +42,7 @@ object BombardierData extends App {
     unitIds foreach {camera =>
       imagesPerCamera.foreach { _ =>
         println("Writing GPS data")
-        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = Some(camera))))
+        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = camera)))
         Thread.sleep(100)
       }
     }
@@ -72,7 +72,7 @@ object BombardierData extends App {
   //    }
   //  }
   publishImageHeader
-  // publishGPSData
+   publishGPSData
   publishIMUData
 
   Thread.sleep(600000)

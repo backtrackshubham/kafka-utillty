@@ -42,7 +42,7 @@ object Monster extends App {
     unitIds foreach {unitId =>
       imagesPerCamera.foreach { _ =>
         println("Writing GPS data")
-        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, unitId, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), cameraId = unitId)))
+        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, unitId, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = unitId)))
         Thread.sleep(50)
       }
     }
