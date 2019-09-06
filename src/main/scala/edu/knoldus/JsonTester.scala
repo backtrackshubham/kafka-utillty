@@ -1,10 +1,13 @@
 package edu.knoldus
 
+import java.util.Date
+
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
 import net.liftweb.json._
 
 case class Person(name: String, isMarried: Boolean, age: Int)
+case class People(time: Date)
 
 object JsonTester extends App{
   implicit val formats = DefaultFormats
@@ -24,11 +27,14 @@ object JsonTester extends App{
   val strInt = jValueStrInt.extractOpt[Person]
   val ageInt = jValueIntAge.extractOpt[Person]
 
+
+  val js: String = write(People(new Date()))
   println("============================")
   println(boolOpt)
   println(boolInt)
   println(strInt)
   println(ageInt)
+  println(js)
 
   println("============================")
 
