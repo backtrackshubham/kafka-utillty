@@ -120,3 +120,4 @@ case class DetectorData(imageId: String,
                         imageRightUrl: String
                        )
 
+case class ImageAggregated(imageUUID: String, imagesURL: String)

@@ -42,6 +42,7 @@ object BombardierData extends App {
     unitIds foreach {camera =>
       imagesPerCamera.foreach { _ =>
         println("Writing GPS data")
+        println(write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = camera)))
         DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = camera)))
         Thread.sleep(100)
       }
