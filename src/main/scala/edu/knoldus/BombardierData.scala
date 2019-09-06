@@ -2,6 +2,8 @@ package edu.knoldus
 
 import java.io.File
 import java.nio.file.Files
+import java.text.SimpleDateFormat
+import java.util.Date
 
 import edu.knoldus.producer.DataProducer
 import edu.knoldus.utility.DataGenerator
@@ -43,7 +45,7 @@ object BombardierData extends App {
       imagesPerCamera.foreach { _ =>
         println("Writing GPS data")
         println(write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = camera)))
-        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = camera)))
+        DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, camera, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = camera, timestampGPS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS zzz").format(new Date()))))
         Thread.sleep(100)
       }
     }
