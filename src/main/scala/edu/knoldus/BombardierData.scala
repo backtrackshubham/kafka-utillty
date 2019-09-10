@@ -33,8 +33,8 @@ object BombardierData extends App {
         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         println("Writing image header")
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${unitId}_$imageId-$index-L.png", byteArray)
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${unitId}_$imageId-$index-R.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageTopic, s"${unitId}_$imageId-$index-L.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageTopic, s"${unitId}_$imageId-$index-R.png", byteArray)
         Thread.sleep(100)
       }
     })

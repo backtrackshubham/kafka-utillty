@@ -15,8 +15,7 @@ object DataProducer {
   private val producer = new KafkaProducer[String, String](props)
 
   private val byteArrayProps = new Properties()
-   byteArrayProps.put("bootstrap.servers", ConfigConstants.kafkaBootStrapServer)
-  // byteArrayProps.put("bootstrap.servers", "13.90.249.246:9092")
+  byteArrayProps.put("bootstrap.servers", ConfigConstants.kafkaBootStrapServer)
   byteArrayProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   byteArrayProps.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer")
   byteArrayProps.put("max.request.size", "1048576")
