@@ -26,7 +26,7 @@ case class ImageHeaderData(
 
 case class ImageObjects(imageId: String, objectDetectorId: String, objects: List[ObjectItem], timestamp: String)
 
-
+//old
 case class ObjectItem(
                        objId: Int,
                        imageId: String,
@@ -39,7 +39,20 @@ case class ObjectItem(
                        disparityMap: Option[String]
                      )
 
-case class BoundingBox(lowerX: Int, lowerY: Int, upperX: Int, upperY: Int)
+
+
+case class ObjectDataMessage(objId: Int,
+                             objLabel: Int,
+                             objLabelDefinition: String,
+                             prob: Double,
+                             bBox: BoundingBox,
+                             unitId: String,
+                             objectDetectorId: String,
+                             timestamp: Long)
+
+
+
+case class BoundingBox(lowerLeftX: Int, lowerLeftY: Int, upperRightX: Int, upperRightY: Int)
 
 
 case class DiversityMap(lowerX: Double, lowerY: Double, center: Double, upperX: Double, upperY: Double)

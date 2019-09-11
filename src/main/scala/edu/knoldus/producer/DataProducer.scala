@@ -22,12 +22,13 @@ object DataProducer {
   private val byteArrayProducer = new KafkaProducer[String, Array[Byte]](byteArrayProps)
 
 
-  def writeToKafka(topic: String, imageId: String, json: String): Unit = {
-    producer.send(new ProducerRecord[String, String](topic,imageId,json))
+  def writeToKafka(topic: String, key: String, json: String): Unit = {
+    val record: ProducerRecord[String, String] = new ProducerRecord[String, String](topic,key,json)
+    producer.send(record)
   }
 
-  def writeToKafka(topic: String, imageId: String, json: Array[Byte]): Unit = {
-    byteArrayProducer.send(new ProducerRecord[String, Array[Byte]](topic, imageId, json)).get()
+  def writeToKafka(topic: String, key: String, json: Array[Byte]): Unit = {
+    byteArrayProducer.send(new ProducerRecord[String, Array[Byte]](topic, key, json)).get()
   }
 
 

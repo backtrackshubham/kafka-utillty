@@ -5,10 +5,12 @@ import java.nio.file.Files
 import java.text.SimpleDateFormat
 import java.util.Date
 
+import edu.knoldus.model.{BoundingBox, ObjectDataMessage}
 import edu.knoldus.producer.DataProducer
 import edu.knoldus.utility.DataGenerator
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
+import org.jboss.netty.handler.codec.serialization.ObjectDecoder
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -27,6 +29,7 @@ object BombardierData extends App {
   println(s"GPS ${DataGenerator.getDataToPublish.gpsData.length}\n =IMU ${DataGenerator.getDataToPublish.imuData.length}\nImageHeader = ${DataGenerator.getDataToPublish.imageHeaderData.length}")
 
   def publishImageHeader = Future {
+    val objectDetector = java.util.UUID.randomUUID.toString
     unitIds.foreach(unitId => {
       val imageId = java.util.UUID.randomUUID().toString
       imagesPerCamera.zipWithIndex.foreach { case (file, index: Int) =>
@@ -35,6 +38,7 @@ object BombardierData extends App {
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
         DataProducer.writeToKafka(ConfigConstants.imageTopic, s"${unitId}_$imageId-$index-L.png", byteArray)
         DataProducer.writeToKafka(ConfigConstants.imageTopic, s"${unitId}_$imageId-$index-R.png", byteArray)
+        publishImageObjects(unitId,s"$imageId-$index", objectDetector)
         Thread.sleep(100)
       }
     })
@@ -64,17 +68,13 @@ object BombardierData extends App {
       }
     }
   }
-  //  def publishImageObjects = Future {
-  //    cameraIds foreach {camera =>
-  //      imagesPerCamera.foreach { _ =>
-  //        println("Writing IMU data")
-  //        (1 to 10) foreach { _ =>
-  //          DataProducer.writeToKafka(ConfigConstants.imageObjects, camera, write(imuData.copy(timestampLinux = System.currentTimeMillis(), cameraId = camera)))
-  //          Thread.sleep(10)
-  //        }
-  //      }
-  //    }
-  //  }
+    def publishImageObjects(unitId: String, imageId: String, objectDetector: String): Unit =  {
+      val imageObject = ObjectDataMessage(1, 1, "somelable", 45.36, BoundingBox(1,2,3,6), "", "", 0)
+      (1 to 5) foreach(count => {
+        println(write(imageObject.copy(count, count + 1, unitId = unitId,objectDetectorId = objectDetector,timestamp = System.currentTimeMillis())))
+        DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(imageObject.copy(count, count + 1, unitId = unitId,objectDetectorId = objectDetector,timestamp = System.currentTimeMillis())))
+      })
+    }
   publishImageHeader
    publishGPSData
   publishIMUData
