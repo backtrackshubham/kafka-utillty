@@ -11,5 +11,7 @@ object ConfigConstants {
   val imageGPSData: String = ConfigProvider.getEnvString("kafka-config.topics.image-gps-data")
   val imageIMUData: String = ConfigProvider.getEnvString("kafka-config.topics.image-imu-data")
   val imageObjects: String = ConfigProvider.getEnvString("kafka-config.topics.image-objects")
+  val trackingData: String = ConfigProvider.getEnvString("kafka-config.topics.tracking-data")
+  val stereoData: String = ConfigProvider.getEnvString("kafka-config.topics.stereo-data")
   val kafkaBootStrapServer: String = ConfigProvider.getEnvString("kafka-config.bootstrap-server")
 }

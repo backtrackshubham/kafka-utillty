@@ -132,4 +132,20 @@ case class DetectorData(imageId: String,
                         imageRightUrl: String
                        )
 
+case class TrackingData(
+                         unitId: String,
+                         objectId: Int,
+                         objectType: Int,
+                         time: Long,
+                         occurrence: List[Occurrence]
+                       )
+
+
 case class ImageAggregated(imageUUID: String, imagesURL: String)
+
+case class Occurrence(imageId: String, description: Description)
+
+case class Description(timestamp: Long, location: Location, bbox: BoundingBox)
+
+case class Location(x: Double, y: Double)
+

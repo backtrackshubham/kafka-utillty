@@ -5,47 +5,48 @@ import java.nio.file.Files
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import edu.knoldus.model.{BoundingBox, ObjectDataMessage}
+import edu.knoldus.model._
 import edu.knoldus.producer.DataProducer
 import edu.knoldus.utility.DataGenerator
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
-import org.jboss.netty.handler.codec.serialization.ObjectDecoder
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object BombardierData extends App {
   implicit val formats: DefaultFormats.type = DefaultFormats
+  val lambda = (x: Int, y: Int) => (x + y, x - y, x * y, x / y)
 
   val imagesPerCamera: List[File] = FutureHelper.fileList.flatMap(element => (1 to 10).map(_ => element))
   val cameraId = "ASD$1231241"
   val cameraIds = (1 to 10).map(count => s"$cameraId-$count")
-  val unitIds = (1 to 10).map(_ => java.util.UUID.randomUUID.toString)
+  val unitIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
   val imuData = DataGenerator.getDataToPublish.imuData.head
 
   println(s"GPS ${DataGenerator.getDataToPublish.gpsData.length}\n =IMU ${DataGenerator.getDataToPublish.imuData.length}\nImageHeader = ${DataGenerator.getDataToPublish.imageHeaderData.length}")
 
-  def publishImageHeader = Future {
+  def publishImageHeader: Future[List[ObjectDataMessage]] = Future {
     val objectDetector = java.util.UUID.randomUUID.toString
-    unitIds.foreach(unitId => {
+    unitIds.flatMap (unitId => {
       val imageId = java.util.UUID.randomUUID().toString
-      imagesPerCamera.zipWithIndex.foreach { case (file, index: Int) =>
+      imagesPerCamera.zipWithIndex.flatMap { case (file, index: Int) =>
         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         println("Writing image header")
+        println(write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
         DataProducer.writeToKafka(ConfigConstants.imageTopic, s"${unitId}_$imageId-$index-L.png", byteArray)
         DataProducer.writeToKafka(ConfigConstants.imageTopic, s"${unitId}_$imageId-$index-R.png", byteArray)
-        publishImageObjects(unitId,s"$imageId-$index", objectDetector)
         Thread.sleep(100)
+        publishImageObjects(unitId, s"$imageId-$index", objectDetector)
       }
     })
   }
 
   def publishGPSData = Future {
-    unitIds foreach {camera =>
+    unitIds foreach { camera =>
       imagesPerCamera.foreach { _ =>
         println("Writing GPS data")
         println(write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = camera)))
@@ -57,7 +58,7 @@ object BombardierData extends App {
 
 
   def publishIMUData = Future {
-    unitIds foreach {camera =>
+    unitIds foreach { camera =>
       imagesPerCamera.foreach { _ =>
         println("Writing IMU data")
         (1 to 10) foreach { _ =>
@@ -68,17 +69,46 @@ object BombardierData extends App {
       }
     }
   }
-    def publishImageObjects(unitId: String, imageId: String, objectDetector: String): Unit =  {
-      val imageObject = ObjectDataMessage(1, 1, "somelable", 45.36, BoundingBox(1,2,3,6), "", "", 0)
-      (1 to 5) foreach(count => {
-        println(write(imageObject.copy(count, count + 1, unitId = unitId,objectDetectorId = objectDetector,timestamp = System.currentTimeMillis())))
-        DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(imageObject.copy(count, count + 1, unitId = unitId,objectDetectorId = objectDetector,timestamp = System.currentTimeMillis())))
-      })
+
+  def publishImageObjects(unitId: String, imageId: String, objectDetector: String): List[ObjectDataMessage] = {
+    val imageObject = ObjectDataMessage(1, 1, "somelable", 45.36, BoundingBox(1, 2, 3, 6), "", "", 0)
+    (1 to 5).toList map (count => {
+      val imgObject = imageObject.copy(count, count + 1, unitId = unitId, objectDetectorId = objectDetector, timestamp = System.currentTimeMillis())
+      println(write(imgObject))
+      DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(imgObject))
+      imgObject
+    })
+  }
+
+  def publishTrackingData(trackingData: List[TrackingData]) = {
+    trackingData.foreach(trackData => {
+      DataProducer.writeToKafka(ConfigConstants.trackingData, trackData.unitId, write(trackData))
+    })
+  }
+
+  def generateTrackingData(objects: List[ObjectDataMessage]): Future[List[TrackingData]] = Future {
+    objects.zipWithIndex map {case (imgObject, index) =>
+      TrackingData(imgObject.unitId,
+        index,
+        index / 10,
+        imgObject.timestamp,
+        (1 to imgObject.objId * 2).toList map (_ => {
+          Occurrence(s"${java.util.UUID.randomUUID.toString}",
+            Description(imgObject.timestamp,
+              Location(4.36 * imgObject.objId, imgObject.objId * 3.36),
+              BoundingBox(4, 6, 5, 9)))
+        }))
     }
-  publishImageHeader
-   publishGPSData
+  }
+  val imageObjects = publishImageHeader
+  publishGPSData
   publishIMUData
+  for{
+    objectList <- imageObjects
+    imgObject <- generateTrackingData(objectList)
+  } yield publishTrackingData(imgObject)
 
   Thread.sleep(600000)
+
 
 }
