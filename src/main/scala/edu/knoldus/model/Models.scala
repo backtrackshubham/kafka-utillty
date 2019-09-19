@@ -145,7 +145,7 @@ case class ImageAggregated(imageUUID: String, imagesURL: String)
 
 case class Occurrence(imageId: String, description: Description)
 
-case class Description(timestamp: Long, location: Location, bbox: BoundingBox)
+case class Description(timestamp: Long, trackingConfidence: Double, location: Location, bbox: BoundingBox)
 
 case class Location(x: Double, y: Double)
 

@@ -95,6 +95,7 @@ object BombardierData extends App {
         (1 to imgObject.objId * 2).toList map (_ => {
           Occurrence(s"${java.util.UUID.randomUUID.toString}",
             Description(imgObject.timestamp,
+              index / 5.694,
               Location(4.36 * imgObject.objId, imgObject.objId * 3.36),
               BoundingBox(4, 6, 5, 9)))
         }))
