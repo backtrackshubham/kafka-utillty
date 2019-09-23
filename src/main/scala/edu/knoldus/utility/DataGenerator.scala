@@ -101,4 +101,8 @@ object DataGenerator {
 
     PublisherModel(imageHeaderDataList, gpsList, imuList, imageObjects)
   }
+  val start = 0
+  val end   = 30
+  val rnd = new scala.util.Random
+  def getTime: Int = start + rnd.nextInt( (end - start) + 1 )
 }

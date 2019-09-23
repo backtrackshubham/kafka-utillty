@@ -83,6 +83,16 @@ object BombardierData extends App {
   def publishTrackingData(trackingData: List[TrackingData]) = {
     trackingData.foreach(trackData => {
       DataProducer.writeToKafka(ConfigConstants.trackingData, trackData.unitId, write(trackData))
+      val testData = TestData(trackData.unitId,
+        trackData.objectId,
+        "someType",
+        "pictureZone",
+        trackData.time,
+        trackData.occurrence.head.description.timestamp,
+        trackData.occurrence.head.description.bbox.lowerLeftX,
+        trackData.occurrence.head.description.bbox.lowerLeftY,
+        "medianLatitude","medianLatitude")
+      DataProducer.writeToKafka("test_topic", trackData.unitId, write(testData))
     })
   }
 
@@ -91,11 +101,11 @@ object BombardierData extends App {
       TrackingData(imgObject.unitId,
         index,
         index / 10,
-        imgObject.timestamp,
-        (1 to imgObject.objId * 2).toList map (_ => {
+        DataGenerator.getTime,
+        (1 to imgObject.objId * 2).toList map (index2 => {
           Occurrence(s"${java.util.UUID.randomUUID.toString}",
             Description(imgObject.timestamp,
-              index / 5.694,
+              index2 / 5.694,
               Location(4.36 * imgObject.objId, imgObject.objId * 3.36),
               BoundingBox(4, 6, 5, 9)))
         }))

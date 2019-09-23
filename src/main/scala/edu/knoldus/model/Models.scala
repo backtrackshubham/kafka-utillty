@@ -149,3 +149,15 @@ case class Description(timestamp: Long, trackingConfidence: Double, location: Lo
 
 case class Location(x: Double, y: Double)
 
+case class TestData(
+                     unitId: String,
+                     objectId: Int,
+                     objectType: String,
+                     pictureZone: String,
+                     duration: Long,
+                     time: Long,
+                     lowerLeftXValue: Int,
+                     lowerLeftYValue: Int,
+                     medianLatitude:String,
+                     medianLongitude:String
+                   )
