@@ -28,7 +28,7 @@ object BombardierData extends App {
 
   println(s"GPS ${DataGenerator.getDataToPublish.gpsData.length}\n =IMU ${DataGenerator.getDataToPublish.imuData.length}\nImageHeader = ${DataGenerator.getDataToPublish.imageHeaderData.length}")
 
-  def publishImageHeader: Future[List[ObjectDataMessage]] = Future {
+  def publishImageHeader: Future[List[(ObjectDataMessage, String)]] = Future {
     val objectDetector = java.util.UUID.randomUUID.toString
     unitIds.flatMap (unitId => {
       val imageId = java.util.UUID.randomUUID().toString
@@ -70,13 +70,13 @@ object BombardierData extends App {
     }
   }
 
-  def publishImageObjects(unitId: String, imageId: String, objectDetector: String): List[ObjectDataMessage] = {
+  def publishImageObjects(unitId: String, imageId: String, objectDetector: String): List[(ObjectDataMessage, String)] = {
     val imageObject = ObjectDataMessage(1, 1, "somelable", 45.36, BoundingBox(1, 2, 3, 6), "", "", 0)
     (1 to 5).toList map (count => {
       val imgObject = imageObject.copy(count, count + 1, unitId = unitId, objectDetectorId = objectDetector, timestamp = System.currentTimeMillis())
       println(write(imgObject))
       DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(imgObject))
-      imgObject
+      (imgObject, imageId)
     })
   }
 
@@ -96,14 +96,14 @@ object BombardierData extends App {
     })
   }
 
-  def generateTrackingData(objects: List[ObjectDataMessage]): Future[List[TrackingData]] = Future {
-    objects.zipWithIndex map {case (imgObject, index) =>
+  def generateTrackingData(objects: List[(ObjectDataMessage, String)]): Future[List[TrackingData]] = Future {
+    objects.zipWithIndex map {case ((imgObject, imageId), index) =>
       TrackingData(imgObject.unitId,
         index,
         index / 10,
         DataGenerator.getTime,
         (1 to imgObject.objId * 2).toList map (index2 => {
-          Occurrence(s"${java.util.UUID.randomUUID.toString}",
+          Occurrence(s"$imageId",
             Description(imgObject.timestamp,
               index2 / 5.694,
               Location(4.36 * imgObject.objId, imgObject.objId * 3.36),
