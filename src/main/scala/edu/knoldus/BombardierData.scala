@@ -101,13 +101,13 @@ object BombardierData extends App {
       TrackingData(imgObject.unitId,
         index,
         index / 10,
-        DataGenerator.getTime,
+        if(index % 2 == 0) 0.5 else 0.3,
         (1 to imgObject.objId * 2).toList map (index2 => {
           Occurrence(s"$imageId",
             Description(imgObject.timestamp,
               index2 / 5.694,
               Location(4.36 * imgObject.objId, imgObject.objId * 3.36),
-              BoundingBox(4, 6, 5, 9)))
+              BoundingBox(4, DataGenerator.getRandomInt(0, 360), 5, 9)))
         }))
     }
   }

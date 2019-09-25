@@ -136,7 +136,7 @@ case class TrackingData(
                          unitId: String,
                          objectId: Int,
                          objectType: Int,
-                         time: Long,
+                         time: Double,
                          occurrence: List[Occurrence]
                        )
 
@@ -154,7 +154,7 @@ case class TestData(
                      objectId: Int,
                      objectType: String,
                      pictureZone: String,
-                     duration: Long,
+                     duration: Double,
                      time: Long,
                      lowerLeftXValue: Int,
                      lowerLeftYValue: Int,
