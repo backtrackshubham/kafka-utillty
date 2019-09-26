@@ -21,7 +21,7 @@ object BombardierData extends App {
   val imagesPerCamera: List[File] = FutureHelper.fileList.flatMap(element => (1 to 10).map(_ => element))
   val cameraId = "ASD$1231241"
   val cameraIds = (1 to 10).map(count => s"$cameraId-$count")
-  val unitIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
+  val unitIds = (1 to 2).toList.map(_ => java.util.UUID.randomUUID.toString)
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
   val imuData = DataGenerator.getDataToPublish.imuData.head
@@ -101,11 +101,11 @@ object BombardierData extends App {
       TrackingData(imgObject.unitId,
         index,
         index / 10,
-        if(index % 2 == 0) 0.5 else 0.3,
+        if(index % 2 == 0) 0.6 else 0.3,
         (1 to imgObject.objId * 2).toList map (index2 => {
           Occurrence(s"$imageId",
             Description(imgObject.timestamp,
-              index2 / 5.694,
+              if(index % 2 == 0) 0.6 else 0.3,
               Location(4.36 * imgObject.objId, imgObject.objId * 3.36),
               BoundingBox(4, DataGenerator.getRandomInt(0, 360), 5, 9)))
         }))
