@@ -161,3 +161,22 @@ case class TestData(
                      medianLatitude:String,
                      medianLongitude:String
                    )
+
+case class TrackingLabelData(
+                              unitId: String,
+                              objectId: Int,
+                              objectType: Int,
+                              objectDesc: String,
+                              firstAppearedTime: Long,
+                              lastAppearedTime: Long,
+                              firstImageId: String,
+                              lastImageId: String,
+                              maxTrackingConfidence: Double,
+                              lowerXValue: Int,
+                              lowerYValue: Int,
+                              duration : Double,
+                              date: Long,
+                              latitude : String,
+                              longitude : String,
+                              totalOccurrences: Int
+                            )
