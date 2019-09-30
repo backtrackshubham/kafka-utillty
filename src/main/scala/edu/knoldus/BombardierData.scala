@@ -71,9 +71,9 @@ object BombardierData extends App {
   }
 
   def publishImageObjects(unitId: String, imageId: String, objectDetector: String): List[(ObjectDataMessage, String)] = {
-    val imageObject = ObjectDataMessage(1, 1, "somelable", 45.36, BoundingBox(1, 2, 3, 6), "", "", 0)
+    val imageObject = ObjectDataMessage(ImageMessage(0,imageId,""), ObjectData(1, 1, "somelable"), 45.36, BoundingBox(1, 2, 3, 6), "", "", 0)
     (1 to 5).toList map (count => {
-      val imgObject = imageObject.copy(count, count + 1, unitId = unitId, objectDetectorId = objectDetector, timestamp = System.currentTimeMillis())
+      val imgObject = imageObject.copy(ObjectDataMessage = imageObject.ObjectDataMessage.copy(count, count + 1), unitId = unitId, objectDetectorId = objectDetector, timestamp = System.currentTimeMillis())
       println(write(imgObject))
       DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(imgObject))
       (imgObject, imageId)
@@ -102,11 +102,11 @@ object BombardierData extends App {
         index,
         index / 10,
         if(index % 2 == 0) 0.6 else 0.3,
-        (1 to imgObject.objId * 2).toList map (index2 => {
+        (1 to imgObject.ObjectDataMessage.objId * 2).toList map (index2 => {
           Occurrence(s"$imageId",
             Description(imgObject.timestamp,
               if(index % 2 == 0) 0.6 else 0.3,
-              Location(4.36 * imgObject.objId, imgObject.objId * 3.36),
+              Location(4.36 * imgObject.ObjectDataMessage.objId, imgObject.ObjectDataMessage.objId * 3.36),
               BoundingBox(4, DataGenerator.getRandomInt(0, 360), 5, 9)))
         }))
     }

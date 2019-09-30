@@ -39,17 +39,18 @@ case class ObjectItem(
                        disparityMap: Option[String]
                      )
 
-
-
-case class ObjectDataMessage(objId: Int,
-                             objLabel: Int,
-                             objLabelDefinition: String,
+case class ObjectDataMessage(ImageData: ImageMessage,
+                             ObjectDataMessage: ObjectData,
                              prob: Double,
                              bBox: BoundingBox,
                              unitId: String,
                              objectDetectorId: String,
                              timestamp: Long)
 
+case class ObjectData(objId: Int, objLabel: Int, objLabelDefinition: String)
+
+
+case class ImageMessage(imageCounter: Long, imageUUID: String, imagesDirUrl: String)
 
 
 case class BoundingBox(lowerLeftX: Int, lowerLeftY: Int, upperRightX: Int, upperRightY: Int)
