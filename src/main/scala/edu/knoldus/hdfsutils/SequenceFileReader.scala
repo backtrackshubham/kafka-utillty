@@ -16,44 +16,49 @@ trait HDFSConnectionFactory {
   val conf: Configuration
   val fs: FileSystem
 
-  def readPathAndSaveToDir(aggregator: ImageAggregated, filesSaved: Int = 0 ): Int
+  def readPathAndSaveToDir(aggregator: ImageAggregated, filesSaved: Int = 0 ): Future[Int]
 }
 
 object ConnectionProvider extends HDFSConnectionFactory {
   val conf = new Configuration
-  System.setProperty("HADOOP_USER_NAME", "freaks")
-  conf.set("fs.defaultFS", "hdfs://localhost:4569")
+  System.setProperty("HADOOP_USER_NAME", "hadoop")
+  conf.set("fs.defaultFS", "hdfs://10.2.5.4:9000")
   conf.set("dfs.replication", "1")
   val fs = FileSystem.get(conf)
   val key: Text = new Text()
   val value: BytesWritable = new BytesWritable()
 
-  def readPathAndSaveToDir(aggregator: ImageAggregated, filesSaved:  Int = 0 ): Int = {
+  def readPathAndSaveToDir(aggregator: ImageAggregated, filesSaved:  Int = 0 ): Future[Int] = Future {
     val leftFileUrl = s"${aggregator.imagesURL}/${aggregator.imageUUID}-L"
     val rightFileUrl = s"${aggregator.imagesURL}/${aggregator.imageUUID}-R"
     recursiveRead(leftFileUrl, aggregator.imageUUID, true)
     recursiveRead(rightFileUrl, aggregator.imageUUID, false)
-
   }
 
   private def recursiveRead(path: String, UUID: String, isLeft: Boolean): Int = {
     val pathSeq = new Path(path)
-    val reader: SequenceFile.Reader = new SequenceFile.Reader(fs, pathSeq, conf)
-    val key: Text = new Text()
-    val value: BytesWritable = new BytesWritable()
-    while (reader.next(key, value)) {
-      val dir = s"/home/freaks/Desktop/sequence-read/$UUID/${if(isLeft) "Left" else "Right"}"
-      val dirFile = new File(dir)
-      if(!dirFile.exists()){
-        dirFile.mkdirs()
+    try{
+      val reader: SequenceFile.Reader = new SequenceFile.Reader(fs, pathSeq, conf)
+      val key: Text = new Text()
+      val value: BytesWritable = new BytesWritable()
+      while (reader.next(key, value)) {
+        val dir = s"/home/freaks/Desktop/sequence-read/$UUID/${if(isLeft) "Left" else "Right"}"
+        val dirFile = new File(dir)
+        if(!dirFile.exists()){
+          dirFile.mkdirs()
+        }
+        val filePath = s"$dir/${key.toString}"
+        println(filePath)
+        val tosave = new File(filePath)
+        val os: OutputStream = new FileOutputStream(tosave)
+        os.write(value.getBytes)
+        os.close()
       }
-      val filePath = s"$dir/${key.toString}"
-      println(filePath)
-      val tosave = new File(filePath)
-      val os: OutputStream = new FileOutputStream(tosave)
-      os.write(value.getBytes)
-      os.close()
+    } catch {
+      case exception: Exception =>
+        println(s"$exception")
     }
+
     0
   }
 }
