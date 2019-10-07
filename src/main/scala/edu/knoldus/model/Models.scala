@@ -50,7 +50,7 @@ case class ObjectDataMessage(ImageData: ImageMessage,
 case class ObjectData(objId: Int, objLabel: Int, objLabelDefinition: String)
 
 
-case class ImageMessage(imageCounter: Long, imageUUID: String, imagesDirUrl: String)
+case class ImageMessage(imageCounter: String, imageUUID: String, imagesDirUrl: String)
 
 
 case class BoundingBox(lowerLeftX: Int, lowerLeftY: Int, upperRightX: Int, upperRightY: Int)
@@ -135,8 +135,8 @@ case class DetectorData(imageId: String,
 
 case class TrackingData(
                          unitId: String,
-                         objectId: Int,
-                         objectType: Int,
+                         objectId: String,
+                         objectType: String,
                          time: Double,
                          occurrence: List[Occurrence]
                        )
@@ -144,7 +144,7 @@ case class TrackingData(
 
 case class ImageAggregated(imageUUID: String, imagesURL: String)
 
-case class Occurrence(imageId: String, description: Description)
+case class Occurrence(imageId: String, timestamp: Long, bbox: BoundingBox, trackingConfidence: Double)
 
 case class Description(timestamp: Long, trackingConfidence: Double, location: Location, bbox: BoundingBox)
 
@@ -152,7 +152,7 @@ case class Location(x: Double, y: Double)
 
 case class TestData(
                      unitId: String,
-                     objectId: Int,
+                     objectId: String,
                      objectType: String,
                      pictureZone: String,
                      duration: Double,
@@ -165,9 +165,8 @@ case class TestData(
 
 case class TrackingLabelData(
                               unitId: String,
-                              objectId: Int,
-                              objectType: Int,
-                              objectDesc: String,
+                              objectId: String,
+                              objectType: String,
                               firstAppearedTime: Long,
                               lastAppearedTime: Long,
                               firstImageId: String,

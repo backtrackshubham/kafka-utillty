@@ -71,7 +71,7 @@ object BombardierData extends App {
   }
 
   def publishImageObjects(unitId: String, imageId: String, objectDetector: String): List[(ObjectDataMessage, String)] = {
-    val imageObject = ObjectDataMessage(ImageMessage(0,imageId,""), ObjectData(1, 1, "somelable"), 45.36, BoundingBox(1, 2, 3, 6), "", "", 0)
+    val imageObject = ObjectDataMessage(ImageMessage("0",imageId,""), ObjectData(1, 1, "somelable"), 45.36, BoundingBox(1, 2, 3, 6), "", "", 0)
     (1 to 5).toList map (count => {
       val imgObject = imageObject.copy(ObjectDataMessage = imageObject.ObjectDataMessage.copy(count, count + 1), unitId = unitId, objectDetectorId = objectDetector, timestamp = System.currentTimeMillis())
       println(write(imgObject))
@@ -88,9 +88,9 @@ object BombardierData extends App {
         "someType",
         "pictureZone",
         trackData.time,
-        trackData.occurrence.head.description.timestamp,
-        trackData.occurrence.head.description.bbox.lowerLeftX,
-        trackData.occurrence.head.description.bbox.lowerLeftY,
+        trackData.occurrence.head.timestamp,
+        trackData.occurrence.head.bbox.lowerLeftX,
+        trackData.occurrence.head.bbox.lowerLeftY,
         "medianLatitude","medianLatitude")
       DataProducer.writeToKafka("test_topic", trackData.unitId, write(testData))
     })
@@ -99,15 +99,14 @@ object BombardierData extends App {
   def generateTrackingData(objects: List[(ObjectDataMessage, String)]): Future[List[TrackingData]] = Future {
     objects.zipWithIndex map {case ((imgObject, imageId), index) =>
       TrackingData(imgObject.unitId,
-        index,
-        index / 10,
+        index.toString,
+        (index / 10).toString,
         if(index % 2 == 0) 0.6 else 0.3,
         (1 to imgObject.ObjectDataMessage.objId * 2).toList map (index2 => {
           Occurrence(s"$imageId",
-            Description(imgObject.timestamp,
-              if(index % 2 == 0) 0.6 else 0.3,
-              Location(4.36 * imgObject.ObjectDataMessage.objId, imgObject.ObjectDataMessage.objId * 3.36),
-              BoundingBox(4, DataGenerator.getRandomInt(0, 360), 5, 9)))
+            imgObject.timestamp,
+            BoundingBox(4, DataGenerator.getRandomInt(0, 360), 5, 9),
+          if(index % 2 == 0) 0.6 else 0.3)
         }))
     }
   }
