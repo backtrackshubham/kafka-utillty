@@ -17,11 +17,12 @@ import scala.concurrent.Future
 object BombardierData extends App {
   implicit val formats: DefaultFormats.type = DefaultFormats
   val lambda = (x: Int, y: Int) => (x + y, x - y, x * y, x / y)
-
+  val uniqueObjects = List("Person","Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "Person", "Person")
   val imagesPerCamera: List[File] = FutureHelper.fileList.flatMap(element => (1 to 10).map(_ => element))
   val cameraId = "ASD$1231241"
   val cameraIds = (1 to 10).map(count => s"$cameraId-$count")
-  val unitIds = (1 to 2).toList.map(_ => java.util.UUID.randomUUID.toString)
+  // val unitIds = (1 to 10).toList.map(_ => "77e5afa2-d882-11e9-994a-00044be64e82")
+ val unitIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
   val imuData = DataGenerator.getDataToPublish.imuData.head
@@ -35,10 +36,10 @@ object BombardierData extends App {
       imagesPerCamera.zipWithIndex.flatMap { case (file, index: Int) =>
         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         println("Writing image header")
-        println(write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
+        println(write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index%05d", unitId = unitId, imageCounter = index)))
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
-        DataProducer.writeToKafka(ConfigConstants.imageTopic, s"${unitId}_$imageId-$index-L.png", byteArray)
-        DataProducer.writeToKafka(ConfigConstants.imageTopic, s"${unitId}_$imageId-$index-R.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-L.png", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-R.png", byteArray)
         Thread.sleep(100)
         publishImageObjects(unitId, s"$imageId-$index", objectDetector)
       }
@@ -99,8 +100,8 @@ object BombardierData extends App {
   def generateTrackingData(objects: List[(ObjectDataMessage, String)]): Future[List[TrackingData]] = Future {
     objects.zipWithIndex map {case ((imgObject, imageId), index) =>
       TrackingData(imgObject.unitId,
-        index.toString,
-        (index / 10).toString,
+        s"$imageId-$index",
+        uniqueObjects(index / 10),
         if(index % 2 == 0) 0.6 else 0.3,
         (1 to imgObject.ObjectDataMessage.objId * 2).toList map (index2 => {
           Occurrence(s"$imageId",
