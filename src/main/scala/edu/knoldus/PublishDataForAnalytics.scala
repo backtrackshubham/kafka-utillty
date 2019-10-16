@@ -15,9 +15,11 @@ object PublishDataForAnalytics extends App {
 
 //  val unitId = java.util.UUID.randomUUID().toString
 //  val utcMills = 3600000 + 1800000
-  val dateStr = "29-09-2019"
+  val dateStr = "10-10-2019"
   val sdt = new SimpleDateFormat("dd-MM-yyyy")
-  val unitId = "73156e8b-4344-44f6-9e8b-4bf16b6aa61f"
+  val unitId = "73156e8b-4344-44f6-9e8b-4bf16b6aa66f"
+  val imageIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
+  val uniqueObjects = List("person","Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "person", "person")
   val llLeft = List(120,180,250)
   val durations = List(0.2,0.4,0.6)
   val trackingLabelData = TrackingLabelData("","0","Person", 0,0,"imageId", "imageIdLast",0.5, 1,2,4.5,4L,"N", "W", 8)
@@ -27,8 +29,8 @@ object PublishDataForAnalytics extends App {
   def publishData: immutable.IndexedSeq[Int] = (0 to 2000) map (index => {
     val data = trackingLabelData.copy(
       unitId = unitId,
-      objectId = index.toString,
-      objectType = (index % 10).toString,
+      objectId = s"${imageIds(index % 10)}-$index",
+      objectType = uniqueObjects(index % 10),
       lowerYValue = llLeft(index % 3),
       duration = durations(index % 3),
       date = time

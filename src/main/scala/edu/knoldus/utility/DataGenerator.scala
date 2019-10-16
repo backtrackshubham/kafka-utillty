@@ -1,13 +1,16 @@
 package edu.knoldus.utility
 
 import java.text.SimpleDateFormat
+import java.time.{Instant, ZoneId}
+import java.time.format.DateTimeFormatter
 import java.util.Date
 
 import edu.knoldus.model.{BoundingBox, Coordinates, GPSData, Gyro, IMUData, ImageHeaderData, ImageObjects, LinAcc, Magnetometer, ObjectItem, Quaternion}
+import sun.util.calendar.ZoneInfo
 
 object DataGenerator {
   val DATE_FORMAT = "dd-MM-yy HH:mm:ss SSS"
-  val formatter = new SimpleDateFormat(DATE_FORMAT)
+  val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of("UTC"))
 
   case class PublisherModel(imageHeaderData: List[ImageHeaderData],
                             gpsData: List[GPSData],
@@ -47,7 +50,7 @@ object DataGenerator {
           "gpsId",
           None,
           getGpsTime(imageHeaderData.timestamp,count),
-          new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS zzz").format(new Date()),
+          FileUtility.GPS_DATE_FORMATTER.format(Instant.now()),
           Coordinates(56, 36.9658),
           "N",
           Coordinates(56, 36.9658),
@@ -95,7 +98,7 @@ object DataGenerator {
               Some("map")
             )
           }).toList,
-          formatter.format(new Date())
+          formatter.format(Instant.now)
         )
     }
 
