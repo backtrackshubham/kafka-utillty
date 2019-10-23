@@ -52,6 +52,8 @@ case class ObjectData(objId: Int, objLabel: Int, objLabelDefinition: String)
 
 case class ImageMessage(imageCounter: String, imageUUID: String, imagesDirUrl: String)
 
+case class ImageSetMessage(imagesCount: Long, imageUUID: String, imagesDirUrl: String, unitId: String, firstImageId: String)
+
 
 case class BoundingBox(lowerLeftX: Int, lowerLeftY: Int, upperRightX: Int, upperRightY: Int)
 
