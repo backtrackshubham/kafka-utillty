@@ -19,7 +19,7 @@ object DataGenerator {
   val getGpsTime: (Long, Int) => Long = (time: Long, count: Int) => if(count % 2 == 0) time + count else time - count
   private def getImageHeaderData: List[ImageHeaderData] = {
     val unitId = java.util.UUID.randomUUID().toString
-    (1 to 10).map(count => {
+    (1 to 6000).map(count => {
       val imageId = java.util.UUID.randomUUID().toString
       val cameraId = "ASD$1231241"
       Thread.sleep(100)
@@ -45,7 +45,7 @@ object DataGenerator {
   def getDataToPublish: PublisherModel = {
     val imageHeaderDataList = getImageHeaderData
     val gpsDataImuDataList: List[(GPSData, IMUData)] = imageHeaderDataList.flatMap(imageHeaderData => {
-      (1 to 10).map(count => {
+      (1 to 6000).map(count => {
         (GPSData(
           "gpsId",
           None,
