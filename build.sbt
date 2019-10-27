@@ -9,6 +9,8 @@ val liftWeb        = "net.liftweb"                  %% "lift-json"          % "3
 val typeSafeConfig = "com.typesafe"                 % "config"              % "1.3.4"
 val hadoopCommon   = "org.apache.hadoop"            % "hadoop-common"       % "3.2.0"
 val hadoopClient   = "org.apache.hadoop"            % "hadoop-client"       % "3.2.0"
+val webCamUtil     = "com.github.sarxos"            % "webcam-capture"      % "0.3.12"
 
-libraryDependencies ++= Seq(kafka, liftWeb, typeSafeConfig, hadoopCommon, hadoopClient)
+
+libraryDependencies ++= Seq(kafka, liftWeb, typeSafeConfig, hadoopCommon, hadoopClient, webCamUtil)
 

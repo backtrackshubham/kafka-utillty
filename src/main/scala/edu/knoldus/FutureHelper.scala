@@ -19,16 +19,16 @@ object FutureHelper {
 
   val currentPath: String = System.getProperty("user.dir")
   val imagePath = s"$currentPath/src/main/resources/images/"
-  val fileList: List[File] = List(new File(s"${imagePath}beginingEnd.png"),
-    new File(s"${imagePath}karma.png"),
-    new File(s"${imagePath}moksha.png"),
-    new File(s"${imagePath}withoutExpectations.png"),
-    new File(s"${imagePath}noJudgement.png"),
-    new File(s"${imagePath}worldWhatYouImagine.png"),
-    new File(s"${imagePath}constantChnage.png"),
-    new File(s"${imagePath}realUnreal.png"),
-    new File(s"${imagePath}goodEvil.png"),
-    new File(s"${imagePath}universe.png"))
+  val fileList: List[File] = List(new File(s"${imagePath}beginingEnd.jpg"),
+    new File(s"${imagePath}karma.jpg"),
+    new File(s"${imagePath}moksha.jpg"),
+    new File(s"${imagePath}withoutExpectations.jpg"),
+    new File(s"${imagePath}noJudgement.jpg"),
+    new File(s"${imagePath}worldWhatYouImagine.jpg"),
+    new File(s"${imagePath}constantChnage.jpg"),
+    new File(s"${imagePath}realUnreal.jpg"),
+    new File(s"${imagePath}goodEvil.jpg"),
+    new File(s"${imagePath}universe.jpg"))
 
   val headerList: List[ImageHeaderData] = publisherModel.imageHeaderData
 
