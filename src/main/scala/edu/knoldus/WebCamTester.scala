@@ -16,5 +16,9 @@ object WebCamTester{
     ImageIO.write(webcam.getImage, "jpg", baos);
     baos.toByteArray;
   }
+
+  def closeCam: Boolean = {
+    webcam.close()
+  }
 //  ImageIO.write(webcam.getImage., "JPEG", new File("/home/freaks/Desktop/hello-world.jpg"))
 }
