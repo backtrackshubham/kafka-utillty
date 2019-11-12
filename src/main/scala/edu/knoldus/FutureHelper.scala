@@ -18,7 +18,7 @@ object FutureHelper {
   val publisherModel: DataGenerator.PublisherModel = DataGenerator.getDataToPublish
 
   val currentPath: String = System.getProperty("user.dir")
-  val imagePath = s"$currentPath/src/main/resources/images/"
+  val imagePath = s"$currentPath/src/main/resources/images/fifty-kb/"
   val fileList: List[File] = List(new File(s"${imagePath}beginingEnd.jpg"),
     new File(s"${imagePath}karma.jpg"),
     new File(s"${imagePath}moksha.jpg"),

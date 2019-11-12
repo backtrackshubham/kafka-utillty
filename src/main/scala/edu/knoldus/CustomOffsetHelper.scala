@@ -2,7 +2,7 @@ package edu.knoldus
 
 import java.util.{Collections, Properties}
 
-import edu.knoldus.model.ImageSetMessage
+import edu.knoldus.model.{ImageSetMessage, ObjectDataMessage}
 import net.liftweb.json.{DefaultFormats, parse}
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
@@ -26,22 +26,31 @@ object CustomOffsetHelper extends App {
   props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
   props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
   props.put("auto.offset.reset", "earliest")
-  props.put("group.id", "something-newesst")
+  props.put("group.id", "464bbda3-2a49-402e-8e4d-864246fa54fa")
   props.put("enable.auto.commit", "false")
   val consumer = new KafkaConsumer[String, String](props)
 
-  def readFromKafka(topic: String = "Image_Aggregate"): Unit = {
+  def readFromKafka(topic: String = "Image_Objects"): Unit = {
     var counter = 0
     this.consumer.subscribe(Collections.singletonList(topic))
     while (true) {
       val record = consumer.poll(5000)
       record.records(topic).forEach(value => {
-        println(value.offset())
-        if (value.offset() > 11790 && value.offset() < 13938) {
+        counter = counter + 1
+        if(counter == 1){
+          println(s"Started Reading ${value.offset()}")
           println(value.value())
+//          println(value.value())
+        }
+        if(value.value() == null){
+          println("Got a null record")
+          println(value.offset())
+        } else{
           val dataFor = parse(value.value())
-          val ex: ImageSetMessage = dataFor.extract[ImageSetMessage]
-          writeToKafka(topic, ex.imageUUID, ex.copy(imagesCount = if (ex.imagesCount == 0) 5999 else ex.imagesCount))
+          val ex: ObjectDataMessage = dataFor.extract[ObjectDataMessage]
+          if(ex.unitId.equals("d6c331fc-b8a5-4c2e-bdab-62baf754331e")){
+            println(s"${value.partition()} ============== ${value.offset()}")
+          }
         }
       })
     }

@@ -1,6 +1,8 @@
 package edu.knoldus
 
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.Date
 
 import edu.knoldus.model.TrackingLabelData
@@ -15,9 +17,9 @@ object PublishDataForAnalytics extends App {
 
 //  val unitId = java.util.UUID.randomUUID().toString
 //  val utcMills = 3600000 + 1800000
-  val dateStr = "10-10-2019"
   val sdt = new SimpleDateFormat("dd-MM-yyyy")
-  val unitId = "73156e8b-4344-44f6-9e8b-4bf16b6aa66f"
+  val dateStr = sdt.format(new Date(Instant.now().minus(7, ChronoUnit.DAYS).toEpochMilli))
+  val unitId = "a68e0614-f2d2-11e9-8d6b-00044be6503a"
   val imageIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
   val uniqueObjects = List("person","Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "person", "person")
   val llLeft = List(120,180,250)

@@ -14,27 +14,23 @@ object FileConsumer extends App {
   implicit val formats = DefaultFormats
 
   val props = new Properties()
-  props.put("bootstrap.servers", "10.2.4.4:9092")
+  props.put("bootstrap.servers", "localhost:9092")
   props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
   props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer")
-  props.put("auto.offset.reset", "latest")
+  props.put("auto.offset.reset", "earliest")
   props.put("group.id", "something-newesst")
   props.put("enable.auto.commit", "false")
   val consumer = new KafkaConsumer[String, Array[Byte]](props)
 
-  def readFromKafka(topic: String = "Image_Message_TEST"): Unit = {
+  def readFromKafka(topic: String = "Image_Message"): Unit = {
     var counter = 0
     this.consumer.subscribe(Collections.singletonList(topic))
     while (true){
       val record = consumer.poll(5000)
       record.records(topic).forEach(value => {
-        println(value.offset())
-        if(value.offset() > 75000){
-          counter += 1
-          val os: OutputStream = new FileOutputStream(s"/home/freaks/Desktop/sequence-read/file-${new Date(value.timestamp())}.jpg")
+          val os: OutputStream = new FileOutputStream(s"/home/freaks/Desktop/sequence-read/cam-files/${value.key()}")
           os.write(value.value())
           os.close()
-        }
       })
     }
   }

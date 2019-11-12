@@ -27,6 +27,11 @@ object DataProducer {
     producer.send(record).get()
   }
 
+  def writeToKafkaTest(topic: String, key: String, json: String): Unit = {
+    val record: ProducerRecord[String, String] = new ProducerRecord[String, String](topic, key, null)
+    producer.send(record).get()
+  }
+
   def writeToKafkaWithNegativeTime(topic: String, key: String, json: String): Unit = {
     val record: ProducerRecord[String, String] = new ProducerRecord[String, String](topic, 2, -1L, key, json)
     producer.send(record)

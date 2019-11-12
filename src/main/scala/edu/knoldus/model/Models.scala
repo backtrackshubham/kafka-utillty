@@ -50,7 +50,7 @@ case class ObjectDataMessage(ImageData: ImageMessage,
 case class ObjectData(objId: Int, objLabel: Int, objLabelDefinition: String)
 
 
-case class ImageMessage(imageCounter: String, imageUUID: String, imagesDirUrl: String)
+case class ImageMessage(imageCounter: String, imageUUID: String, imagesDirUrl: String, imageName: String)
 
 case class ImageSetMessage(imagesCount: Long, imageUUID: String, imagesDirUrl: String, unitId: String, firstImageId: String)
 
