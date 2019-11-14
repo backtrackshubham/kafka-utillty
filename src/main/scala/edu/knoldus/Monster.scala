@@ -9,15 +9,15 @@ import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.Duration
 
 object Monster extends App {
   implicit val formats: DefaultFormats.type = DefaultFormats
 
   val imagesPerCamera: List[File] = FutureHelper.fileList.flatMap(element => (1 to 10000).map(_ => element))
-  val cameraId = "ASD$1231241"
-  val cameraIds = (1 to 100).map(count => s"$cameraId-$count")
-  val unitIds = (1 to 100).map(_ => java.util.UUID.randomUUID.toString)
+//  val unitIds = (1 to 100).map(_ => java.util.UUID.randomUUID.toString)
+  val unitIds = (1 to 100).map(_ => "a68e0614-f2d2-11e9-8d6b-00044be6503aj")
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
   val imuData = DataGenerator.getDataToPublish.imuData.head
@@ -31,9 +31,9 @@ object Monster extends App {
         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         println("Writing image header")
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${unitId}_$imageId-$index-L.png", byteArray)
-        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, s"${unitId}_$imageId-$index-R.png", byteArray)
-        Thread.sleep(50)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
+//        Thread.sleep(50)
       }
     })
   }
@@ -43,7 +43,7 @@ object Monster extends App {
       imagesPerCamera.foreach { _ =>
         println("Writing GPS data")
         DataProducer.writeToKafka(ConfigConstants.imageGPSTopicSubscribe, unitId, write(gpsData.copy(timestampLinux = System.currentTimeMillis(), unitId = unitId)))
-        Thread.sleep(50)
+//        Thread.sleep(50)
       }
     }
   }
@@ -55,7 +55,7 @@ object Monster extends App {
         println("Writing IMU data")
         (1 to 10) foreach { _ =>
           DataProducer.writeToKafka(ConfigConstants.imageIMUTopicSubscribe, unitId, write(imuData.copy(timeStampLinux = System.currentTimeMillis(), unitId = unitId)))
-          Thread.sleep(5)
+//          Thread.sleep(5)
         }
       }
     }
@@ -74,7 +74,12 @@ object Monster extends App {
   publishImageHeader
   //  publishGPSData
    publishIMUData
+  val res = Future.sequence(List(publishImageHeader, publishIMUData, publishGPSData))
 
-  Thread.sleep(600000)
+  Await.ready(res.map(_ => {
+    println("================================ Process monster completed")
+    //    WebCamTester.closeCam
+    0
+  }), Duration.Inf)
 
 }

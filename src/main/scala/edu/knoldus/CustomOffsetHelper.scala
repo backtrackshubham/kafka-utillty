@@ -48,7 +48,7 @@ object CustomOffsetHelper extends App {
         } else{
           val dataFor = parse(value.value())
           val ex: ObjectDataMessage = dataFor.extract[ObjectDataMessage]
-          if(ex.unitId.equals("d6c331fc-b8a5-4c2e-bdab-62baf754331e")){
+          if(ex.imageData.unitId.equals("d6c331fc-b8a5-4c2e-bdab-62baf754331e")){
             println(s"${value.partition()} ============== ${value.offset()}")
           }
         }
