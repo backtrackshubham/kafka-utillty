@@ -39,8 +39,8 @@ case class ObjectItem(
                        disparityMap: Option[String]
                      )
 
-case class ObjectDataMessage(imageData: ImageMessage,
-                             imageObjects: List[ObjectData],
+case class ObjectDataMessage(ImageData: ImageMessage,
+                             imageObjects: Option[List[ObjectData]],
                              objectDetectorId: String,
                              timestamp: Long)
 

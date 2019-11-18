@@ -89,17 +89,16 @@ object BombardierData extends App {
   }
 
   def publishImageObjects(unitId: String, imageId: String, imageUUID: String, objectDetector: String, counter: Int): (ObjectDataMessage, String) = {
-    val imageObject = ObjectDataMessage(ImageMessage(Array.empty[Int], true, imageId,"", s"$imageId.jpg" , "test", "unit"), List.empty[ObjectData], "yolo3", 0)
     val data = if(counter % 5 == 0){//every fifth image would be empty
       ObjectDataMessage(
         ImageMessage(Array.empty[Int], true, imageId,imageUUID, s"$imageId.jpg" , s"$imageId.jpg", unitId),
-        List.empty[ObjectData],
+        None,
         "yolo3", Instant.now().toEpochMilli
       )
     } else{
       ObjectDataMessage(
         ImageMessage(Array.empty[Int], false, imageId,imageUUID, s"$imageId.jpg" , s"$imageId.jpg", unitId),
-        (0 to (counter % 10)).toList.map(value => ObjectData(counter+value, value, uniqueObjects(value), 3.45, BoundingBox(1,2,3,4))),
+        Some((0 to (counter % 10)).toList.map(value => ObjectData(counter+value, value, uniqueObjects(value), 3.45, BoundingBox(1,2,3,4)))),
         "yolo3", Instant.now().toEpochMilli
       )
     }
@@ -115,12 +114,12 @@ object BombardierData extends App {
 
   def generateTrackingData(objects: List[(ObjectDataMessage, String)]): Future[List[TrackingData]] = Future {
     (objects.zipWithIndex flatMap  {case ((imgObject, imageId), index) =>
-      if(imgObject.imageData.imageEmpty){
+      if(imgObject.ImageData.imageEmpty){
         None
       } else{
-        Some(imgObject.imageObjects.map(imageObjectData => {
-          TrackingData(imgObject.imageData.unitId,
-            s"${imgObject.imageData.imageUUID}-$index-${imageObjectData.objId}",
+        Some(imgObject.imageObjects.get.map(imageObjectData => {
+          TrackingData(imgObject.ImageData.unitId,
+            s"${imgObject.ImageData.imageUUID}-$index-${imageObjectData.objId}",
             imageObjectData.objLabelDefinition,
             if(index % 2 == 0) 0.6 else 0.3,
             (1 to new java.util.Random(10).nextInt()).toList map (index2 => {

@@ -19,7 +19,7 @@ object FileUtility {
     imageHeader.extract[List[ImageHeaderData]]
   }
 
-  private def readFile(path: String): String = {
+  def readFile(path: String): String = {
     new String(Files.readAllBytes(Paths.get(path)))
   }
 
