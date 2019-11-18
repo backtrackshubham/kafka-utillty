@@ -25,7 +25,7 @@ object BombardierData extends App {
  val imagesPerCamera: List[File] = FutureHelper.fileList.zipWithIndex.flatMap{
    case (element, index)=>
      println(s"============== statring for index $index")
-     (1 to 50).map(_ => element)
+     (1 to 600).map(_ => element)
  }
 /*   val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap{
      case (element, index)=>
@@ -52,10 +52,10 @@ object BombardierData extends App {
       imagesPerCamera.zipWithIndex.map { case (file, index: Int) =>
          val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = f"$imageId-$index%05d", unitId = unitId, imageCounter = index)))
-         DataProducer.writeToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-L.jpg", byteArray)
-         DataProducer.writeToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
-//        DataProducer.writeToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-L.jpg", WebCamTester.getImage)
-  //      DataProducer.writeToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-R.jpg", WebCamTester.getImage)
+         DataProducer.writeImageToKafka(ConfigConstants.imageTopic, imageId,f"${unitId}_$imageId-$index%05d-L.jpg", byteArray)
+         DataProducer.writeImageToKafka(ConfigConstants.imageTopic, imageId,f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
+//        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-L.jpg", WebCamTester.getImage)
+  //      DataProducer.writeImageToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-R.jpg", WebCamTester.getImage)
         Thread.sleep(100)
         publishImageObjects(unitId, f"$imageId-$index%05d", imageId, objectDetector, index)
       }

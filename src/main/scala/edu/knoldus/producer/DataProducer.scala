@@ -1,10 +1,12 @@
 package edu.knoldus.producer
 
 
+import java.util
 import java.util.Properties
 
 import edu.knoldus.ConfigConstants
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
+import org.apache.kafka.common.header.Header
 
 object DataProducer {
   private val props = new Properties()
@@ -37,8 +39,15 @@ object DataProducer {
     producer.send(record)
   }
 
-  def writeToKafka(topic: String, key: String, json: Array[Byte]): Unit = {
-    byteArrayProducer.send(new ProducerRecord[String, Array[Byte]](topic, key, json)).get()
+  def writeImageToKafka(topic: String, key: String, messageHeaders: String, json: Array[Byte]): Unit = {
+    val head: Header = new Header(){
+      override def key(): String = "image-key"
+      println("converting bytes")
+      override def value(): Array[Byte] = messageHeaders.getBytes()
+    }
+    val headers = new util.ArrayList[Header]()
+    headers.add(head)
+    byteArrayProducer.send(new ProducerRecord[String, Array[Byte]](topic, null, key, json, headers)).get()
   }
 
 
