@@ -25,18 +25,18 @@ object BombardierData extends App {
  val imagesPerCamera: List[File] = FutureHelper.fileList.zipWithIndex.flatMap{
    case (element, index)=>
      println(s"============== statring for index $index")
-     (1 to 100).map(_ => element)
+     (1 to 120).map(_ => element)
  }
-/*   val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap{
-     case (element, index)=>
-       println(s"============== statring for index $index")
-       (1 to 100).map(_ => element)
-   }*/
+//   val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap{
+//     case (element, index)=>
+//       println(s"============== statring for index $index")
+//       (1 to 120).map(_ => element)
+//   }
   val cameraId = "ASD$1231241"
 //  val cameraIds = (1 to 10).map(count => s"$cameraId-$count")
 //   val unitIds = (1 to 20).toList.map(_ => "77e5afa2-d882-11e9-994a-00044be64e82")
-    val unitIds = List("a68e0614-f2d2-11e9-8d6b-00044be6503a")
-//  val unitIds = List(java.util.UUID.randomUUID.toString)
+    // val unitIds = List("6b1732d0-0c69-11ea-a72c-00044be6503a")
+ val unitIds = List(java.util.UUID.randomUUID.toString)
 // val unitIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
@@ -54,8 +54,8 @@ object BombardierData extends App {
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = f"$imageId-$index%05d", unitId = unitId, imageCounter = index)))
          DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L",f"${unitId}_$imageId-$index%05d-L.jpg", byteArray)
          DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R",f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
-//        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-L.jpg", WebCamTester.getImage)
-  //      DataProducer.writeImageToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-R.jpg", WebCamTester.getImage)
+//        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R",f"${unitId}_$imageId-$index%05d-R.jpg", WebCamTester.getImage)
+//        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L",f"${unitId}_$imageId-$index%05d-L.jpg", WebCamTester.getImage)
         Thread.sleep(100)
         publishImageObjects(unitId, f"$imageId-$index%05d", imageId, objectDetector, index)
       }
@@ -142,7 +142,7 @@ object BombardierData extends App {
 
   Await.ready(res.map(_ => {
     println("================================ Process completed")
-    //WebCamTester.closeCam
+//    WebCamTester.closeCam
     0
   }), Duration.Inf)
 }

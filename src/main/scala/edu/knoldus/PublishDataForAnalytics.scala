@@ -17,9 +17,10 @@ object PublishDataForAnalytics extends App {
 
 //  val unitId = java.util.UUID.randomUUID().toString
 //  val utcMills = 3600000 + 1800000
+
   val sdt = new SimpleDateFormat("dd-MM-yyyy")
   val dateStr = sdt.format(new Date(Instant.now().minus(7, ChronoUnit.DAYS).toEpochMilli))
-  val unitId = "a68e0614-f2d2-11e9-8d6b-00044be6503a"
+  val unitId = "21a96b14-0c5e-11ea-a3b9-00044be6503a"
   val imageIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
   val uniqueObjects = List("person","Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "person", "person")
   val llLeft = List(120,180,250)
