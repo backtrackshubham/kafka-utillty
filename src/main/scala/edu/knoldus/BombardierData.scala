@@ -2,11 +2,7 @@ package edu.knoldus
 
 import java.io.File
 import java.nio.file.Files
-import java.text.SimpleDateFormat
 import java.time.Instant
-import java.util.Date
-
-import edu.knoldus.hdfsutils.ConnectionProvider
 import edu.knoldus.model._
 import edu.knoldus.producer.DataProducer
 import edu.knoldus.utility.{DataGenerator, FileUtility}
@@ -25,19 +21,10 @@ object BombardierData extends App {
  val imagesPerCamera: List[File] = FutureHelper.fileList.zipWithIndex.flatMap{
    case (element, index)=>
      println(s"============== statring for index $index")
-     (1 to 120).map(_ => element)
+     (1 to ConfigConstants.imagesPerCamera).map(_ => element)
  }
-//   val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap{
-//     case (element, index)=>
-//       println(s"============== statring for index $index")
-//       (1 to 120).map(_ => element)
-//   }
-  val cameraId = "ASD$1231241"
-//  val cameraIds = (1 to 10).map(count => s"$cameraId-$count")
-//   val unitIds = (1 to 20).toList.map(_ => "77e5afa2-d882-11e9-994a-00044be64e82")
-    // val unitIds = List("6b1732d0-0c69-11ea-a72c-00044be6503a")
+ val cameraId = "ASD$1231241"
  val unitIds = List(java.util.UUID.randomUUID.toString)
-// val unitIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
   val imuData = DataGenerator.getDataToPublish.imuData.head
@@ -54,8 +41,6 @@ object BombardierData extends App {
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = f"$imageId-$index%05d", unitId = unitId, imageCounter = index)))
          DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L",f"${unitId}_$imageId-$index%05d-L.jpg", byteArray)
          DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R",f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
-//        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R",f"${unitId}_$imageId-$index%05d-R.jpg", WebCamTester.getImage)
-//        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L",f"${unitId}_$imageId-$index%05d-L.jpg", WebCamTester.getImage)
         Thread.sleep(100)
         publishImageObjects(unitId, f"$imageId-$index%05d", imageId, objectDetector, index)
       }
@@ -102,13 +87,13 @@ object BombardierData extends App {
         "yolo3", Instant.now().toEpochMilli
       )
     }
-    DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(data))
+//    DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(data))
     (data, imageId)
   }
 
   def publishTrackingData(trackingData: List[TrackingData]) = {
     trackingData.foreach(trackData => {
-      DataProducer.writeToKafka(ConfigConstants.trackingData, trackData.unitId, write(trackData))
+//      DataProducer.writeToKafka(ConfigConstants.trackingData, trackData.unitId, write(trackData))
     })
   }
 
@@ -119,7 +104,7 @@ object BombardierData extends App {
       } else{
         Some(imgObject.imageObjects.get.map(imageObjectData => {
           TrackingData(imgObject.ImageData.unitId,
-            s"${imgObject.ImageData.imageUUID}-$index-${imageObjectData.objId}",
+            s"${imgObject.ImageData.imageUUID}-T-${imageObjectData.objId}",
             imageObjectData.objLabelDefinition,
             if(index % 2 == 0) 0.6 else 0.3,
             (1 to new java.util.Random(10).nextInt()).toList map (index2 => {
@@ -142,7 +127,6 @@ object BombardierData extends App {
 
   Await.ready(res.map(_ => {
     println("================================ Process completed")
-//    WebCamTester.closeCam
     0
   }), Duration.Inf)
 }

@@ -42,7 +42,6 @@ object DataProducer {
   def writeImageToKafka(topic: String, key: String, messageHeaders: String, json: Array[Byte]): Unit = {
     val head: Header = new Header(){
       override def key(): String = "image-key"
-      println("converting bytes")
       override def value(): Array[Byte] = messageHeaders.getBytes()
     }
     val headers = new util.ArrayList[Header]()

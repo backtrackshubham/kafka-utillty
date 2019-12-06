@@ -14,4 +14,5 @@ object ConfigConstants {
   val trackingData: String = ConfigProvider.getEnvString("kafka-config.topics.tracking-data")
   val stereoData: String = ConfigProvider.getEnvString("kafka-config.topics.stereo-data")
   val kafkaBootStrapServer: String = ConfigProvider.getEnvString("kafka-config.bootstrap-server")
+  val imagesPerCamera: Int = ConfigProvider.getEnvInt("images-per-camera") / 10
 }
