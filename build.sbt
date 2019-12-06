@@ -13,5 +13,5 @@ lazy val root = (project in file(".")).
     name := "kerb-kafka-publisher",
     version := "0.1",
     scalaVersion := "2.12.0",
-    mainClass in (Compile, run) := Some("com.knoldus.util.HDFSReader")
+    mainClass in (Compile, run) := Some("edu.knoldus.BombardierData")
   )
