@@ -102,13 +102,13 @@ object BombardierData extends App {
         "yolo3", Instant.now().toEpochMilli
       )
     }
-    DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(data))
+//    DataProducer.writeToKafka(ConfigConstants.imageObjects, imageId, write(data))
     (data, imageId)
   }
 
   def publishTrackingData(trackingData: List[TrackingData]) = {
     trackingData.foreach(trackData => {
-      DataProducer.writeToKafka(ConfigConstants.trackingData, trackData.unitId, write(trackData))
+  //    DataProducer.writeToKafka(ConfigConstants.trackingData, trackData.unitId, write(trackData))
     })
   }
 
