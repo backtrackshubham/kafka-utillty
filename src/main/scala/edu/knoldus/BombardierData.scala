@@ -22,21 +22,21 @@ object BombardierData extends App {
   val lambda = (x: Int, y: Int) => (x + y, x - y, x * y, x / y)
   val uniqueObjects = List("Person","Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "Person", "Person")
   println(s"========================= ${FutureHelper.fileList}")
- val imagesPerCamera: List[File] = FutureHelper.fileList.zipWithIndex.flatMap{
-   case (element, index)=>
-     println(s"============== statring for index $index")
-     (1 to 100).map(_ => element)
- }
-/*   val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap{
+// val imagesPerCamera: List[File] = FutureHelper.fileList.zipWithIndex.flatMap{
+//   case (element, index)=>
+//     println(s"============== statring for index $index")
+//     (1 to 100).map(_ => element)
+// }
+   val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap{
      case (element, index)=>
        println(s"============== statring for index $index")
-       (1 to 100).map(_ => element)
-   }*/
+       (1 to 60).map(_ => element)
+   }
   val cameraId = "ASD$1231241"
 //  val cameraIds = (1 to 10).map(count => s"$cameraId-$count")
 //   val unitIds = (1 to 20).toList.map(_ => "77e5afa2-d882-11e9-994a-00044be64e82")
-    val unitIds = List("a68e0614-f2d2-11e9-8d6b-00044be6503a")
-//  val unitIds = List(java.util.UUID.randomUUID.toString)
+     val unitIds = List("0df6d895-2ae8-498a-adc1-5fc96cbd583e")
+// val unitIds = List(java.util.UUID.randomUUID.toString)
 // val unitIds = (1 to 10).toList.map(_ => java.util.UUID.randomUUID.toString)
   val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
   val gpsData = DataGenerator.getDataToPublish.gpsData.head
@@ -50,12 +50,12 @@ object BombardierData extends App {
       println(s"publishing for $unitId")
       val imageId = java.util.UUID.randomUUID().toString
       imagesPerCamera.zipWithIndex.map { case (file, index: Int) =>
-         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
+  //         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = f"$imageId-$index%05d", unitId = unitId, imageCounter = index)))
-         DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L",f"${unitId}_$imageId-$index%05d-L.jpg", byteArray)
-         DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R",f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
-//        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-L.jpg", WebCamTester.getImage)
-  //      DataProducer.writeImageToKafka(ConfigConstants.imageTopic, f"${unitId}_$imageId-$index%05d-R.jpg", WebCamTester.getImage)
+//         DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L",f"${unitId}_$imageId-$index%05d-L.jpg", byteArray)
+//         DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R",f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
+        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R",f"${unitId}_$imageId-$index%05d-R.jpg", WebCamTester.getImage)
+        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L",f"${unitId}_$imageId-$index%05d-L.jpg", WebCamTester.getImage)
         Thread.sleep(100)
         publishImageObjects(unitId, f"$imageId-$index%05d", imageId, objectDetector, index)
       }
@@ -118,11 +118,12 @@ object BombardierData extends App {
         None
       } else{
         Some(imgObject.imageObjects.get.map(imageObjectData => {
+          val occ = (1 to new java.util.Random().nextInt(10)).toList
           TrackingData(imgObject.ImageData.unitId,
-            s"${imgObject.ImageData.imageUUID}-$index-${imageObjectData.objId}",
+            s"${imgObject.ImageData.imageUUID}-T-${imageObjectData.objId}",
             imageObjectData.objLabelDefinition,
             if(index % 2 == 0) 0.6 else 0.3,
-            (1 to new java.util.Random(10).nextInt()).toList map (index2 => {
+            (if(occ.isEmpty) List(1) else occ) map (index2 => {
               Occurrence(s"$imageId",
                 imgObject.timestamp,
                 BoundingBox(4, DataGenerator.getRandomInt(0, 360), 5, 9),
@@ -142,7 +143,7 @@ object BombardierData extends App {
 
   Await.ready(res.map(_ => {
     println("================================ Process completed")
-    //WebCamTester.closeCam
+    WebCamTester.closeCam
     0
   }), Duration.Inf)
 }
