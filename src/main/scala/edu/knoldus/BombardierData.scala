@@ -25,7 +25,7 @@ object BombardierData extends App {
  val imagesPerCamera: List[File] = FutureHelper.fileList.zipWithIndex.flatMap{
    case (element, index)=>
      println(s"============== statring for index $index")
-     (1 to 120).map(_ => element)
+     (1 to 180).map(_ => element)
  }
 //   val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap{
 //     case (element, index)=>
