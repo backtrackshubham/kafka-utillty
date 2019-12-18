@@ -1,9 +1,7 @@
 package edu.knoldus
 
 import java.util
-import java.util.{Collections, Properties, UUID}
-
-import edu.knoldus.CounterFix.byteArrayProducer
+import java.util.{Collections, Properties}
 import net.liftweb.json.DefaultFormats
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}

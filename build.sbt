@@ -12,5 +12,10 @@ val hadoopClient   = "org.apache.hadoop"            % "hadoop-client"       % "3
 val webCamUtil     = "com.github.sarxos"            % "webcam-capture"      % "0.3.12"
 
 
-libraryDependencies ++= Seq(kafka, liftWeb, typeSafeConfig, hadoopCommon, hadoopClient, webCamUtil)
+libraryDependencies ++= Seq(kafka, liftWeb, typeSafeConfig, hadoopCommon, hadoopClient, webCamUtil,
+  "org.json4s" %% "json4s-native" % "3.7.0-M1",
+  "org.json4s" %% "json4s-jackson" % "3.7.0-M1",
+  "org.json4s" %% "json4s-core" % "3.7.0-M1",
+  "org.json4s" %% "json4s-ast" % "3.7.0-M1"
+)
 

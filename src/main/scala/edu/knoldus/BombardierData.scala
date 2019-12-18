@@ -98,7 +98,7 @@ object BombardierData extends App {
     } else{
       ObjectDataMessage(
         ImageMessage(Array.empty[Int], false, imageId,imageUUID, s"$imageId.jpg" , s"$imageId.jpg", unitId),
-        Some((0 to (counter % 10)).toList.map(value => ObjectData(counter+value, value, uniqueObjects(value), 3.45, BoundingBox(1,2,3,4)))),
+        Some((0 to (counter % 10)).toList.map(value => ObjectData(counter+value, value, uniqueObjects(value), 3.45, BoundingBox(1,2,3,4), 4.5 * value))),
         "yolo3", Instant.now().toEpochMilli
       )
     }

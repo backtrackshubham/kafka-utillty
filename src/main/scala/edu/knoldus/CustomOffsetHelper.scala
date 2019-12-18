@@ -2,18 +2,32 @@ package edu.knoldus
 
 import java.util.{Collections, Properties}
 
-import edu.knoldus.model.{ImageSetMessage, ObjectDataMessage}
+import edu.knoldus.model.BoundingBox
 import net.liftweb.json.{DefaultFormats, parse}
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import net.liftweb.json.Serialization.write
 
+import scala.util.matching.Regex
 
+case class TrackingData2(
+                          unitId: String,
+                          objectId: String,
+                          objectType: String,
+                          imageUUID: Option[String],
+                          time: Double,
+                          occurrence: List[Occurrence2]
+                        )
+case class Occurrence2(imageId: String, timestamp: Long, bbox: BoundingBox, trackingConfidence: Double, distance: Option[Double])
 
 object CustomOffsetHelper extends App {
 
+  val IMAGE_UUID_REGEX: Regex = """[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}""".r
+
+
+
   val producerProps = new Properties()
-  producerProps.put("bootstrap.servers", "192.168.11.183:9092")
+  producerProps.put("bootstrap.servers", "192.168.11.181:9092")
   producerProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   producerProps.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   producerProps.put("max.request.size", "1048576")
@@ -36,6 +50,14 @@ object CustomOffsetHelper extends App {
     while (true) {
       val record = consumer.poll(5000)
       record.records(topic).forEach(value => {
+        val newTrackingData = parse(value.value()).extract[TrackingData2]
+
+        val imageUUID = IMAGE_UUID_REGEX.findFirstIn(newTrackingData.occurrence.map(_.imageId).distinct.head).fold("")(identity)
+
+        val finalTrack = if(value.offset() % 5 == 0) newTrackingData.copy(imageUUID = Some(imageUUID), occurrence = newTrackingData.occurrence.map(_.copy(distance = Some(12.36))))
+        else newTrackingData.copy(imageUUID = Some(imageUUID), occurrence = newTrackingData.occurrence.map(_.copy(distance = Some(-1))))
+
+//        writeToKafka("Tracking_Data", value.key(), write(finalTrack))
         writeToKafka("Tracking_Data", value.key(), value.value())
 
 //        counter = counter + 1

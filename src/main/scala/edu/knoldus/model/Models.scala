@@ -44,7 +44,7 @@ case class ObjectDataMessage(ImageData: ImageMessage,
                              objectDetectorId: String,
                              timestamp: Long)
 
-case class ObjectData(objId: Int, objLabel: Int, objLabelDefinition: String, prob: Double, bBox: BoundingBox)
+case class ObjectData(objId: Int, objLabel: Int, objLabelDefinition: String, prob: Double, bBox: BoundingBox, distance:Double)
 
 
 case class ImageMessage(imageFile: Array[Int], imageEmpty: Boolean, imageId: String, imageUUID: String, imagesDirUrl: String, imageName: String, unitId: String)
