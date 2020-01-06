@@ -31,8 +31,8 @@ object Monster extends App {
         val byteArray = Files.readAllBytes(file.toPath) //excess overhead
         println("Writing image header")
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = s"$imageId-$index", unitId = unitId, imageCounter = index)))
-        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageId, f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
-        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageId, f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
+        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageId, f"${unitId}_$imageId-$index%05d-R.jpg", byteArray, 0)
+        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageId, f"${unitId}_$imageId-$index%05d-R.jpg", byteArray, 0)
 //        Thread.sleep(50)
       }
     })

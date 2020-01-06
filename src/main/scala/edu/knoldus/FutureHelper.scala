@@ -42,8 +42,8 @@ object FutureHelper {
         println("Writing data")
         println(s"publishing header for ${imageHeaderData.imageId}")
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
-        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.imageId, s"${imageHeaderData.unitId}_${imageHeaderData.imageId}-L.png" , byteArray)
-        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.imageId,s"${imageHeaderData.unitId}_${imageHeaderData.imageId}-R.png", byteArray)
+        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.imageId, s"${imageHeaderData.unitId}_${imageHeaderData.imageId}-L.png" , byteArray, 0)
+        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.imageId,s"${imageHeaderData.unitId}_${imageHeaderData.imageId}-R.png", byteArray, 0)
         Thread.sleep(100)
     }
 
@@ -80,8 +80,8 @@ object FutureHelper {
         val byteArray = Files.readAllBytes(file.toPath)
         println("Writing data")
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.cameraId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis())))
-        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.imageId,s"${imageHeaderData.imageId}-L.png" , byteArray)
-        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.imageId,s"${imageHeaderData.imageId}-R.png", byteArray)
+        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.imageId,s"${imageHeaderData.imageId}-L.png" , byteArray, 0)
+        DataProducer.writeImageToKafka(ConfigConstants.imageHeaderTopic, imageHeaderData.imageId,s"${imageHeaderData.imageId}-R.png", byteArray, 0)
         Thread.sleep(100)
     }
 
