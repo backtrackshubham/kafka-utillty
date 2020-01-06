@@ -25,7 +25,7 @@ object PublishDataForAnalytics extends App {
   val uniqueObjects = List("person","Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "person", "person")
   val llLeft = List(120,180,250)
   val durations = List(0.2,0.4,0.6)
-  val trackingLabelData = TrackingLabelData("","0","Person", 0,0,"imageId", "imageIdLast",0.5, 1,2,4.5,4L,"N", "W", 8)
+  val trackingLabelData = TrackingLabelData("","0","Person", 0,0,"imageId", "imageIdLast",0.5, 1,2,4.5,4L,"N", "W", 8, 45.56)
   val date = sdt.parse(dateStr)
   var time = date.getTime
 //  var time = date.getTime - utcMills

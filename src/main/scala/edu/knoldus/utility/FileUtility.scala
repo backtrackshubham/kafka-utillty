@@ -4,7 +4,7 @@ import java.nio.file.{Files, Paths}
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-import edu.knoldus.model.{GPSData, IMUData, ImageHeaderData, ImageObjects}
+import edu.knoldus.model.{GPSData, IMUData, ImageHeaderData, ImageObjects, TrackingComplete}
 import net.liftweb.json._
 
 
@@ -39,5 +39,11 @@ object FileUtility {
     val fileJson = readFile(path)
     val imageObjects = parse(fileJson)
     imageObjects.extract[List[IMUData]]
+  }
+
+  def readTrackCompleteJsonFile(path: String): List[TrackingComplete] = {
+    val fileJson = readFile(path)
+    val imageObjects = parse(fileJson)
+    imageObjects.extract[List[TrackingComplete]]
   }
 }
