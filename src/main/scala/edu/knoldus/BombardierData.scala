@@ -75,7 +75,7 @@ object BombardierData extends App {
    val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap{
      case (element, index)=>
        println(s"============== statring for index $index")
-       (1 to 6).map(_ => element)
+       (1 to 2).map(_ => element)
    }
   val cameraId = "ASD$1231241"
 //  val cameraIds = (1 to 10).map(count => s"$cameraId-$count")

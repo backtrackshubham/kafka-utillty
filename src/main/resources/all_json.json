@@ -9,3 +9,90 @@
 { "gps_id": "GPS3456", "image_id": "ed1b1485-9b224c75-b2da-9ef44898b822", "camera_Id": "e7269804-1fec-4600-8b13-a48517ef0e2f", "unit_id": "35b0ad51-8b75-4790-ad9b-449896005f4a", "gps_Counter": 26, "gps_Time_UTC": "2019-07-30", "gps_Date": "2019-07-30", "gps_Lat": "40D", "gps_Lng": "50L", "gps_Altitude": 12.35, "gps_Angle": 25.3, "gps_Satellites": 56, "gps_Speed_knots": 48.36, "gps_Fix": true, "gps_quality": false }
 
 { "imu_Id": "IMU3213112", "camera_id": "e7269804-1fec-4600-8b13-a48517ef0e2f", "image_id": "ed1b1485-9b224c75-b2da-9ef44898b822", "unit_id": "35b0ad51-8b75-4790-ad9b-449896005f4a", "imu_Time": 1564425000, "now_time_since_epoch": 1564425052, "linAcc": { "x": 45, "y": 45, "z": 45 }, "magnetometer": { "x": 45, "y": 45, "z": 45 }, "gyroscope": { "alpha": 45, "beta": 45, "gamma": 45 }, "quaternion": { "x": 45, "y": 45, "z": 45, "w": 48 } }
+
+
+{
+  "unitId": "0df6d895-2ae8-498a-adc1-5fc96cbd583e",
+  "objectId": "b3a489ca-483e-4445-aa9d-c771e9062f69-T-25",
+  "objectType": "Drone",
+  "imageUUID": "b3a489ca-483e-4445-aa9d-c771e9062f69",
+  "time": 0.3,
+  "occurrence": [{
+    "imageId": "b3a489ca-483e-4445-aa9d-c771e9062f69-00019",
+    "timestamp": 1578309767015,
+    "bbox": {
+      "lowerLeftX": 4,
+      "lowerLeftY": 156,
+      "upperRightX": 5,
+      "upperRightY": 9
+    },
+    "trackingConfidence": 0.3,
+    "distance": -1
+  }, {
+    "imageId": "b3a489ca-483e-4445-aa9d-c771e9062f69-00019",
+    "timestamp": 1578309767015,
+    "bbox": {
+      "lowerLeftX": 4,
+      "lowerLeftY": 315,
+      "upperRightX": 5,
+      "upperRightY": 9
+    },
+    "trackingConfidence": 0.3,
+    "distance": -1
+  }, {
+    "imageId": "b3a489ca-483e-4445-aa9d-c771e9062f69-00019",
+    "timestamp": 1578309767015,
+    "bbox": {
+      "lowerLeftX": 4,
+      "lowerLeftY": 301,
+      "upperRightX": 5,
+      "upperRightY": 9
+    },
+    "trackingConfidence": 0.3,
+    "distance": 12.0
+  }, {
+    "imageId": "b3a489ca-483e-4445-aa9d-c771e9062f69-00019",
+    "timestamp": 1578309767015,
+    "bbox": {
+      "lowerLeftX": 4,
+      "lowerLeftY": 262,
+      "upperRightX": 5,
+      "upperRightY": 9
+    },
+    "trackingConfidence": 0.3,
+    "distance": -1
+  }, {
+    "imageId": "b3a489ca-483e-4445-aa9d-c771e9062f69-00019",
+    "timestamp": 1578309767015,
+    "bbox": {
+      "lowerLeftX": 4,
+      "lowerLeftY": 315,
+      "upperRightX": 5,
+      "upperRightY": 9
+    },
+    "trackingConfidence": 0.3,
+    "distance": -1
+  }, {
+    "imageId": "b3a489ca-483e-4445-aa9d-c771e9062f69-00019",
+    "timestamp": 1578309767015,
+    "bbox": {
+      "lowerLeftX": 4,
+      "lowerLeftY": 343,
+      "upperRightX": 5,
+      "upperRightY": 9
+    },
+    "trackingConfidence": 0.3,
+    "distance": -1
+  }, {
+    "imageId": "b3a489ca-483e-4445-aa9d-c771e9062f69-00019",
+    "timestamp": 1578309767015,
+    "bbox": {
+      "lowerLeftX": 4,
+      "lowerLeftY": 51,
+      "upperRightX": 5,
+      "upperRightY": 9
+    },
+    "trackingConfidence": 0.3,
+    "distance": -1
+  }]
+}
