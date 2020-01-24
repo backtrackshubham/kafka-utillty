@@ -14,5 +14,10 @@ object ConfigConstants {
   val trackingData: String = ConfigProvider.getEnvString("kafka-config.topics.tracking-data")
   val stereoData: String = ConfigProvider.getEnvString("kafka-config.topics.stereo-data")
   val kafkaBootStrapServer: String = ConfigProvider.getEnvString("kafka-config.bootstrap-server")
-  val imagesPerCamera: Int = ConfigProvider.getEnvInt("images-per-camera") / 10
+  val imagesPerCamera: Int = ConfigProvider.getEnvInt("kafka-config.images-per-camera") / 10
+  val numCameras: Int = ConfigProvider.getEnvInt("kafka-config.num-cameras")
+  if(numCameras > 10) {
+    println("Num camera cant be more then 10")
+    sys.exit()
+  }
 }

@@ -1,29 +1,30 @@
 package edu.knoldus
 
-import java.io.File
-import java.nio.file.Files
+import java.io.InputStream
 
-import edu.knoldus.model.ImageHeaderData
-import edu.knoldus.producer.DataProducer
 import net.liftweb.json.DefaultFormats
-import net.liftweb.json.Serialization.write
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 object FutureHelper {
   implicit val formats: DefaultFormats.type = DefaultFormats
+  val imagePath = s"images/fifty-kb/"
 
-  val currentPath: String = System.getProperty("user.dir")
-  val imagePath = s"resources/images/fifty-kb/"
-  val fileList: List[File] = List(new File(s"${imagePath}beginingEnd.jpg"),
-    new File(s"${imagePath}karma.jpg"),
-    new File(s"${imagePath}moksha.jpg"),
-    new File(s"${imagePath}withoutExpectations.jpg"),
-    new File(s"${imagePath}noJudgement.jpg"),
-    new File(s"${imagePath}worldWhatYouImagine.jpg"),
-    new File(s"${imagePath}constantChnage.jpg"),
-    new File(s"${imagePath}realUnreal.jpg"),
-    new File(s"${imagePath}goodEvil.jpg"),
-    new File(s"${imagePath}universe.jpg"))
+  val lam: (String, String) => InputStream = (path: String, fileName: String) => {
+    val fileInJar = getClass().getResourceAsStream(s"/$path$fileName")
+    fileInJar
+  }
+  val fileNames: String => InputStream = lam(imagePath, _)
+  val files = List("beginingEnd.jpg",
+    "karma.jpg",
+    "moksha.jpg",
+    "withoutExpectations.jpg",
+    "noJudgement.jpg",
+    "worldWhatYouImagine.jpg",
+    "constantChnage.jpg",
+    "realUnreal.jpg",
+    "goodEvil.jpg",
+    "universe.jpg")
+
+  val functionalFileList: List[InputStream] = files.map(fileNames)
+
 }
