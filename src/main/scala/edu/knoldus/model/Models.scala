@@ -44,7 +44,7 @@ case class ObjectDataMessage(ImageData: ImageMessage,
                              objectDetectorId: String,
                              timestamp: Long)
 
-case class ObjectData(objId: Int, objLabel: Int, objLabelDefinition: String, prob: Double, bBox: BoundingBox)
+case class ObjectData(objId: Int, objLabel: Int, objLabelDefinition: String, prob: Double, bBox: BoundingBox, distance:Double)
 
 
 case class ImageMessage(imageFile: Array[Int], imageEmpty: Boolean, imageId: String, imageUUID: String, imagesDirUrl: String, imageName: String, unitId: String)
@@ -136,6 +136,7 @@ case class TrackingData(
                          unitId: String,
                          objectId: String,
                          objectType: String,
+                         imageUUID: String,
                          time: Double,
                          occurrence: List[Occurrence]
                        )
@@ -143,7 +144,7 @@ case class TrackingData(
 
 case class ImageAggregated(imageUUID: String, imagesURL: String)
 
-case class Occurrence(imageId: String, timestamp: Long, bbox: BoundingBox, trackingConfidence: Double)
+case class Occurrence(imageId: String, timestamp: Long, bbox: BoundingBox, trackingConfidence: Double, distance: Double)
 
 case class Description(timestamp: Long, trackingConfidence: Double, location: Location, bbox: BoundingBox)
 
@@ -177,5 +178,8 @@ case class TrackingLabelData(
                               date: Long,
                               latitude : String,
                               longitude : String,
-                              totalOccurrences: Int
+                              totalOccurrences: Int,
+                              distance: Double
                             )
+
+case class TrackingComplete(imageUUID: String, objectId: String, unitId: String)

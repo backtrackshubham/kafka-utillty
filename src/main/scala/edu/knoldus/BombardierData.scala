@@ -38,6 +38,7 @@ object BombardierData extends App {
       val imageId = java.util.UUID.randomUUID().toString
       imagesPerCamera.zipWithIndex.map { case (file, index: Int) =>
          val byteArray = Files.readAllBytes(file.toPath) //excess overhead
+        val timestamp = System.currentTimeMillis()
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = System.currentTimeMillis(), imageId = f"$imageId-$index%05d", unitId = unitId, imageCounter = index)))
          DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L",f"${unitId}_$imageId-$index%05d-L.jpg", byteArray)
          DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R",f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
@@ -83,7 +84,7 @@ object BombardierData extends App {
     } else{
       ObjectDataMessage(
         ImageMessage(Array.empty[Int], false, imageId,imageUUID, s"$imageId.jpg" , s"$imageId.jpg", unitId),
-        Some((0 to (counter % 10)).toList.map(value => ObjectData(counter+value, value, uniqueObjects(value), 3.45, BoundingBox(1,2,3,4)))),
+        Some((0 to (counter % 10)).toList.map(value => ObjectData(counter+value, value, uniqueObjects(value), 3.45, BoundingBox(1,2,3,4), 2.36))),
         "yolo3", Instant.now().toEpochMilli
       )
     }
@@ -106,12 +107,13 @@ object BombardierData extends App {
           TrackingData(imgObject.ImageData.unitId,
             s"${imgObject.ImageData.imageUUID}-T-${imageObjectData.objId}",
             imageObjectData.objLabelDefinition,
+            imgObject.ImageData.imageUUID,
             if(index % 2 == 0) 0.6 else 0.3,
             (1 to new java.util.Random(10).nextInt()).toList map (index2 => {
               Occurrence(s"$imageId",
                 imgObject.timestamp,
                 BoundingBox(4, DataGenerator.getRandomInt(0, 360), 5, 9),
-                if(index % 2 == 0) 0.6 else 0.3)
+                if(index % 2 == 0) 0.6 else 0.3, 2.36)
             }))
         }))
       }
