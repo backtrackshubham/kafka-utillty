@@ -5,7 +5,7 @@ import java.nio.file.Files
 import java.time.Instant
 import edu.knoldus.model._
 import edu.knoldus.producer.DataProducer
-import edu.knoldus.utility.{DataGenerator, FileUtility}
+import edu.knoldus.utility.FileUtility
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
 
@@ -13,7 +13,60 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 
+
+object DummyData{
+
+  val rnd = new scala.util.Random
+  def getRandomInt(start: Int, end: Int): Int = start + rnd.nextInt( (end - start) + 1 )
+
+  val imageHeader = ImageHeaderData(s"",
+    "",
+    "",
+    "ipAddress",
+    System.currentTimeMillis(),
+    0.0f,
+    false,
+    1,
+    2,
+    3,
+    4,
+    6,
+    5,
+    9,
+    None,
+    0)
+
+  val gpsData = GPSData(
+    "gpsId",
+    None,
+    0,
+    FileUtility.GPS_DATE_FORMATTER.format(Instant.now()),
+    Coordinates(56, 36.9658),
+    "N",
+    Coordinates(56, 36.9658),
+    "W",
+    5.6,
+    36.96,
+    false,
+    None,
+    "None"
+  )
+  val imuData = IMUData("imuId",
+    0,
+    0,
+    None,
+    LinAcc(1,2,3),
+    Magnetometer(7,8,9),
+    Gyro(4,5,6),
+    Quaternion(9, 6, 3, 8),
+    "None",
+    None
+  )
+}
+
+
 object BombardierData extends App {
+
   implicit val formats: DefaultFormats.type = DefaultFormats
   val lambda = (x: Int, y: Int) => (x + y, x - y, x * y, x / y)
   val uniqueObjects = List("Person","Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "Person", "Person")
@@ -25,11 +78,9 @@ object BombardierData extends App {
  }
  val cameraId = "ASD$1231241"
  val unitIds = List(java.util.UUID.randomUUID.toString)
-  val imageHeaderData = DataGenerator.getDataToPublish.imageHeaderData.head
-  val gpsData = DataGenerator.getDataToPublish.gpsData.head
-  val imuData = DataGenerator.getDataToPublish.imuData.head
-
-  println(s"GPS ${DataGenerator.getDataToPublish.gpsData.length}\n =IMU ${DataGenerator.getDataToPublish.imuData.length}\nImageHeader = ${DataGenerator.getDataToPublish.imageHeaderData.length}")
+  val imageHeaderData: ImageHeaderData = DummyData.imageHeader
+  val gpsData: GPSData = DummyData.gpsData
+  val imuData: IMUData = DummyData.imuData
 
   def publishImageHeader: Future[List[(ObjectDataMessage, String)]] = Future {
     val objectDetector = java.util.UUID.randomUUID.toString
@@ -112,7 +163,7 @@ object BombardierData extends App {
             (1 to new java.util.Random(10).nextInt()).toList map (index2 => {
               Occurrence(s"$imageId",
                 imgObject.timestamp,
-                BoundingBox(4, DataGenerator.getRandomInt(0, 360), 5, 9),
+                BoundingBox(4, DummyData.getRandomInt(0, 360), 5, 9),
                 if(index % 2 == 0) 0.6 else 0.3, 2.36)
             }))
         }))
