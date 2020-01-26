@@ -40,12 +40,20 @@ object DataProducer {
   }
 
   def writeImageToKafka(topic: String, key: String, messageHeaders: String, json: Array[Byte]): Unit = {
-    val head: Header = new Header(){
+    val keyHeader: Header = new Header(){
       override def key(): String = "image-key"
       override def value(): Array[Byte] = messageHeaders.getBytes()
     }
+
+    val counterHeader: Header = new Header(){
+      override def key(): String = "image-counter"
+      override def value(): Array[Byte] = ((ConfigConstants.imagesPerCamera * 10) - 1).toString.getBytes
+    }
+
+
     val headers = new util.ArrayList[Header]()
-    headers.add(head)
+    headers.add(keyHeader)
+    headers.add(counterHeader)
     byteArrayProducer.send(new ProducerRecord[String, Array[Byte]](topic, null, key, json, headers)).get()
   }
 

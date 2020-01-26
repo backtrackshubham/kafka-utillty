@@ -186,7 +186,8 @@ object BombardierData extends App {
   println(units.mkString("\n"))
   println("================================")
 
-  val res: Future[List[Unit]] = Future.sequence(unitIds.map(unitId => {
+  val res: Future[List[Unit]] = Future.sequence(units.map(unitId => {
+    println(s"======================= Going to publish $unitId")
     Future.sequence(List(publishGPSData(unitId), publishIMUData(unitId), publishAll(unitId)))
   })).map(_.flatten)
 
