@@ -49,6 +49,7 @@ object Utils {
     } else {
       val key: Text = new Text()
       val value: BytesWritable = new BytesWritable()
+      try{
       val reader = new SequenceFile.Reader(conf, SequenceFile.Reader.file(new Path(leftFileUrl)))
 
       try{
@@ -60,6 +61,10 @@ object Utils {
           println(s"$exception occurred")
       }
       reader.close()
+      } catch {
+        case exception: Exception =>
+          println(s"$exception occurred")
+      }
       leftImageCount
     }
 
@@ -68,17 +73,22 @@ object Utils {
     } else {
       val key: Text = new Text()
       val value: BytesWritable = new BytesWritable()
-      val reader = new SequenceFile.Reader(conf, SequenceFile.Reader.file(new Path(rightFileUrl)))
+      try {
+        val reader = new SequenceFile.Reader(conf, SequenceFile.Reader.file(new Path(rightFileUrl)))
 
-      try{
-        while(reader.next(key,value)){
-          rightImageCount = rightImageCount + 1
+        try {
+          while (reader.next(key, value)) {
+            rightImageCount = rightImageCount + 1
+          }
+        } catch {
+          case exception: Exception =>
+            println(s"$exception occurred")
         }
+        reader.close()
       } catch {
         case exception: Exception =>
           println(s"$exception occurred")
       }
-      reader.close()
       rightImageCount
     }
 
