@@ -74,7 +74,7 @@ object BombardierData extends App {
   val lambda = (x: Int, y: Int) => (x + y, x - y, x * y, x / y)
   val uniqueObjects = List("Person", "Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "Person", "Person")
 
-  val imagesPerCamera: List[InputStream] = FutureHelper.functionalFileList.zipWithIndex.flatMap {
+  val imagesPerCamera: List[Int] = (1 to FutureHelper.functionalFileListLeft.length).toList.zipWithIndex.flatMap {
     case (element, _) =>
       (1 to ConfigConstants.imagesPerCamera).map(_ => element)
   }
@@ -90,13 +90,14 @@ object BombardierData extends App {
     List(unitId).flatMap(unitId => {
       println(s"publishing for $unitId")
       val imageId = java.util.UUID.randomUUID().toString
-      imagesPerCamera.zipWithIndex.map { case (file, index: Int) =>
+      imagesPerCamera.zipWithIndex.map { case (_, index: Int) =>
 //        val byteArray = Files.readAllBytes(file.toPath) //excess overhead
-        val byteArray = IOUtils.toByteArray(file) //excess overhead
+        val leftFile = FutureHelper.functionalFileListLeft(index % 30) //excess overhead
+        val rightFile = FutureHelper.functionalFileListRight(index % 30) //excess overhead
         val timestamp = System.currentTimeMillis()
         DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = timestamp, imageId = f"$imageId-$index%05d", unitId = unitId, imageCounter = index)))
-        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L", f"${unitId}_$imageId-$index%05d-L.jpg", byteArray)
-        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R", f"${unitId}_$imageId-$index%05d-R.jpg", byteArray)
+        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L", f"${unitId}_$imageId-$index%05d-L.jpg", leftFile)
+        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R", f"${unitId}_$imageId-$index%05d-R.jpg", rightFile)
         Thread.sleep(100)
         publishImageObjects(unitId, f"$imageId-$index%05d", imageId, objectDetector, index)
       }
@@ -186,10 +187,32 @@ object BombardierData extends App {
   println(units.mkString("\n"))
   println("================================")
 
-  val res: Future[List[Unit]] = Future.sequence(units.map(unitId => {
+//  val res: Future[List[Unit]] = Future.sequence(units.map(unitId => {
+//    println(s"======================= Going to publish $unitId")
+//    Future.sequence(List(publishGPSData(unitId), publishIMUData(unitId), publishAll(unitId)))
+//  })).map(_.flatten)
+
+  val res: Future[List[Int]] = Future.sequence(units.map(unitId => {
     println(s"======================= Going to publish $unitId")
-    Future.sequence(List(publishGPSData(unitId), publishIMUData(unitId), publishAll(unitId)))
+    publishOnlyImage(unitId)
   })).map(_.flatten)
+
+  def publishOnlyImage(unitId: String): Future[List[Int]] = Future {
+    List(unitId).flatMap(unitId => {
+      println(s"publishing for $unitId")
+      val imageId = java.util.UUID.randomUUID().toString
+      imagesPerCamera.zipWithIndex.map { case (_, index: Int) =>
+        val leftFile = FutureHelper.functionalFileListLeft(index % 30) //excess overhead
+        val rightFile = FutureHelper.functionalFileListRight(index % 30) //excess overhead
+        val timestamp = System.currentTimeMillis()
+        DataProducer.writeToKafka(ConfigConstants.imageHeaderTopic, unitId, write(imageHeaderData.copy(timestamp = timestamp, imageId = f"$imageId-$index%05d", unitId = unitId, imageCounter = index)))
+        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-L", f"${unitId}_$imageId-$index%05d-L.jpg", leftFile)
+        DataProducer.writeImageToKafka(ConfigConstants.imageTopic, s"$unitId-$imageId-R", f"${unitId}_$imageId-$index%05d-R.jpg", rightFile)
+        Thread.sleep(100)
+        index
+      }
+    })
+  }
 
 //  val res = Future.sequence(List(publishGPSData(u), publishIMUData, publishAll))
 

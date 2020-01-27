@@ -16,8 +16,8 @@ object ConfigConstants {
   val kafkaBootStrapServer: String = ConfigProvider.getEnvString("kafka-config.bootstrap-server")
   val imagesPerCamera: Int = ConfigProvider.getEnvInt("kafka-config.images-per-camera") / 10
   val numCameras: Int = ConfigProvider.getEnvInt("kafka-config.num-cameras")
-  if(numCameras > 10) {
-    println("Num camera cant be more then 10")
+  if(numCameras > sys.runtime.availableProcessors()) {
+    println(s"Num camera cant be more than ${sys.runtime.availableProcessors()} as the machine only have ${sys.runtime.availableProcessors()}  cores ")
     sys.exit()
   }
 }
