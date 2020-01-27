@@ -74,7 +74,7 @@ object BombardierData extends App {
   val lambda = (x: Int, y: Int) => (x + y, x - y, x * y, x / y)
   val uniqueObjects = List("Person", "Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "Person", "Person")
 
-  val imagesPerCamera: List[Int] = (1 to FutureHelper.functionalFileListLeft.length).toList.zipWithIndex.flatMap {
+  val imagesPerCamera: List[Int] = (1 to 10).toList.zipWithIndex.flatMap {
     case (element, _) =>
       (1 to ConfigConstants.imagesPerCamera).map(_ => element)
   }
