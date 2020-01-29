@@ -183,3 +183,4 @@ case class TrackingLabelData(
                             )
 
 case class TrackingComplete(imageUUID: String, objectId: String, unitId: String)
+case class ImageAggregate2(imageUUID: String, imagesDirUrl: String, unitId: String, firstImageId: String, imagesLeftFolder: Int, imagesRightFolder: Int, imagesCount: Int, hdfsCreationTime: String)
