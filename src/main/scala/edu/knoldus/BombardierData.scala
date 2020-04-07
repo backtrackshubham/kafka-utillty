@@ -7,6 +7,7 @@ import edu.knoldus.producer.DataProducer
 import edu.knoldus.utility.FileUtility
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
+import org.apache.commons.io.IOUtils
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.concurrent.{Await, Future}
@@ -81,9 +82,9 @@ object BombardierData extends App {
 
   val cameraId = "ASD$1231241"
   val unitIds = List(java.util.UUID.randomUUID.toString)
-  val imageHeaderData: ImageHeaderData = imageHeader
-  val gpsData: GPSData = gpsData
-  val imuData: IMUData = imuData
+  val imageHeaderData: ImageHeaderData = DummyData.imageHeader
+  val gpsData: GPSData = DummyData.gpsData
+  val imuData: IMUData = DummyData.imuData
 
   def publishImageHeader(unitId: String): Future[List[(ObjectDataMessage, String)]] = Future {
     val objectDetector = java.util.UUID.randomUUID.toString
@@ -168,7 +169,7 @@ object BombardierData extends App {
             (1 to new java.util.Random(10).nextInt()).toList map (index2 => {
               Occurrence(s"$imageId",
                 imgObject.timestamp,
-                BoundingBox(4, getRandomInt(0, 360), 5, 9),
+                BoundingBox(4, DummyData.getRandomInt(0, 360), 5, 9),
                 if (index % 2 == 0) 0.6 else 0.3, 2.36)
             }))
         }))
