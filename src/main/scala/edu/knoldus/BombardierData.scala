@@ -1,7 +1,5 @@
 package edu.knoldus
 
-import java.io.InputStream
-
 import java.time.Instant
 
 import edu.knoldus.model._
@@ -9,14 +7,15 @@ import edu.knoldus.producer.DataProducer
 import edu.knoldus.utility.FileUtility
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
-import org.apache.commons.io.IOUtils
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 
 
 object DummyData {
+
+  implicit val customThreadPool: ExecutionContextExecutor = ExecutionContext.fromExecutor(new java.util.concurrent.ForkJoinPool(50))
 
   val rnd = new scala.util.Random
 
@@ -70,6 +69,7 @@ object DummyData {
 
 object BombardierData extends App {
 
+  import DummyData._
   implicit val formats: DefaultFormats.type = DefaultFormats
   val lambda = (x: Int, y: Int) => (x + y, x - y, x * y, x / y)
   val uniqueObjects = List("Person", "Car", "Building", "Bus", "Pole", "Bag", "Drone", "Truck", "Person", "Person")
@@ -81,9 +81,9 @@ object BombardierData extends App {
 
   val cameraId = "ASD$1231241"
   val unitIds = List(java.util.UUID.randomUUID.toString)
-  val imageHeaderData: ImageHeaderData = DummyData.imageHeader
-  val gpsData: GPSData = DummyData.gpsData
-  val imuData: IMUData = DummyData.imuData
+  val imageHeaderData: ImageHeaderData = imageHeader
+  val gpsData: GPSData = gpsData
+  val imuData: IMUData = imuData
 
   def publishImageHeader(unitId: String): Future[List[(ObjectDataMessage, String)]] = Future {
     val objectDetector = java.util.UUID.randomUUID.toString
@@ -168,7 +168,7 @@ object BombardierData extends App {
             (1 to new java.util.Random(10).nextInt()).toList map (index2 => {
               Occurrence(s"$imageId",
                 imgObject.timestamp,
-                BoundingBox(4, DummyData.getRandomInt(0, 360), 5, 9),
+                BoundingBox(4, getRandomInt(0, 360), 5, 9),
                 if (index % 2 == 0) 0.6 else 0.3, 2.36)
             }))
         }))
@@ -184,6 +184,7 @@ object BombardierData extends App {
   val units = (1 to ConfigConstants.numCameras).toList.map(_ => java.util.UUID.randomUUID().toString)
 
   println("================================")
+  println(s"Started at ${Instant.now}")
   println(units.mkString("\n"))
   println("================================")
 
@@ -217,7 +218,7 @@ object BombardierData extends App {
 //  val res = Future.sequence(List(publishGPSData(u), publishIMUData, publishAll))
 
   Await.ready(res.map(_ => {
-    println("================================ Process completed")
+    println(s"================================ Process completed at ${Instant.now}")
     0
   }), Duration.Inf)
 }

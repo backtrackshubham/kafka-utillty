@@ -1,6 +1,7 @@
 package edu.knoldus
 
 object ConfigConstants {
+  val ecThreads = 50
   val imageHeaderTopic: String = ConfigProvider.getEnvString("kafka-config.topics.image-header")
   val imageTopic: String = ConfigProvider.getEnvString("kafka-config.topics.image-message")
   val imageHeaderTopicProcessed: String = ConfigProvider.getEnvString("kafka-config.topics.image-header-processed")
@@ -16,8 +17,8 @@ object ConfigConstants {
   val kafkaBootStrapServer: String = ConfigProvider.getEnvString("kafka-config.bootstrap-server")
   val imagesPerCamera: Int = ConfigProvider.getEnvInt("kafka-config.images-per-camera") / 10
   val numCameras: Int = ConfigProvider.getEnvInt("kafka-config.num-cameras")
-  if(numCameras > sys.runtime.availableProcessors()) {
-    println(s"Num camera cant be more than ${sys.runtime.availableProcessors()} as the machine only have ${sys.runtime.availableProcessors()}  cores ")
+  if(numCameras > ecThreads - 9) {
+    println(s"Num camera cant be more than 40 as the machine only using $ecThreads have only ${sys.runtime.availableProcessors()}  cores ")
     sys.exit()
   }
 }
