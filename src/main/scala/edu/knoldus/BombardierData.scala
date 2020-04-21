@@ -9,18 +9,21 @@ import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
 import org.apache.commons.io.IOUtils
 
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, ExecutionContextExecutorService, Future}
 import scala.concurrent.duration.Duration
 
 
 object DummyData {
 
-  implicit val customThreadPool: ExecutionContextExecutor = ExecutionContext.fromExecutor(new java.util.concurrent.ForkJoinPool(50))
+  implicit val customThreadPool: ExecutionContextExecutorService = ExecutionContext.fromExecutorService(new java.util.concurrent.ForkJoinPool(50))
 
   val rnd = new scala.util.Random
 
   def getRandomInt(start: Int, end: Int): Int = start + rnd.nextInt((end - start) + 1)
+
+  def shutdownExecutor  = {
+    customThreadPool.shutdown()
+  }
 
   val imageHeader = ImageHeaderData(s"",
     "",
@@ -220,6 +223,7 @@ object BombardierData extends App {
 
   Await.ready(res.map(_ => {
     println(s"================================ Process completed at ${Instant.now}")
+    shutdownExecutor
     0
   }), Duration.Inf)
 }
